@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2f07e237-c919-44ee-ac20-79740f9c747a">
+	<property name="ireport.zoom" value="1.464100000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="14"/>
+	<queryString>
+		<![CDATA[call sistemalectorrfid.obtenerEmpleadosResumen();
+]]>
+	</queryString>
+	<field name="uid" class="java.lang.String"/>
+	<field name="nombreCompleto" class="java.lang.String"/>
+	<field name="tipoEmpleado" class="java.lang.String"/>
+	<field name="fotografia" class="java.lang.Object"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="24" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="497" splitType="Stretch">
+			<image>
+				<reportElement uuid="5b167a6b-aaad-432f-8b3f-b59411f3babd" x="0" y="0" width="555" height="497"/>
+				<imageExpression><![CDATA["C:\\Users\\ferlo\\Downloads\\CREDENCIAL.PNG"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement uuid="d0e7622e-130b-4c47-b9e4-349d2be75ad5" x="258" y="204" width="236" height="25"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombreCompleto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="efba4986-616a-4ea4-b7ca-91a17d5b8f9f" x="258" y="253" width="236" height="32"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipoEmpleado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="758c7336-a2fc-4d45-bfbd-e6436878931a" x="258" y="162" width="236" height="28"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{uid}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement uuid="4ed297c0-054d-4be0-a12a-0ee7a28ab11b" x="50" y="123" width="166" height="162"/>
+				<imageExpression><![CDATA[]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

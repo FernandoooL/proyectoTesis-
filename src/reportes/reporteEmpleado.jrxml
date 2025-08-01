@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="264233a1-03ef-464d-bde0-76834750012f">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="DEPARTAMENTO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIPO_EMPLEADO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ESTATUS_EMPLEADO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[CALL REPORTE_EMPLEADOS($P{TIPO_EMPLEADO}, $P{DEPARTAMENTO}, $P{ESTATUS_EMPLEADO})]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="apellidoPaterno" class="java.lang.String"/>
+	<field name="apellidoMaterno" class="java.lang.String"/>
+	<field name="tipoEmpleado" class="java.lang.String"/>
+	<field name="estatusEmpleado" class="java.lang.String"/>
+	<field name="departamento" class="java.lang.String"/>
+	<field name="fechaNacimiento" class="java.sql.Date"/>
+	<field name="domicilio" class="java.lang.String"/>
+	<field name="telefono" class="java.lang.String"/>
+	<field name="curp" class="java.lang.String"/>
+	<field name="observaciones" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="1" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="01c0f72d-1af6-4afb-84b9-f99766392870" x="217" y="0" width="140" height="20"/>
+				<textElement/>
+				<text><![CDATA[REPORTE DE EMPLEADO]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="7ee61469-35c8-4049-abab-8ac7b97c0c15" x="0" y="0" width="13" height="20"/>
+				<textElement/>
+				<text><![CDATA[ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8f7214c6-441d-4a6c-a63c-90e020ca06c9" x="31" y="0" width="109" height="20"/>
+				<textElement/>
+				<text><![CDATA[NOMBRE COMPLETO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="43ebcbbc-5c61-4c99-8eaa-053db5d6f517" x="275" y="0" width="82" height="20"/>
+				<textElement/>
+				<text><![CDATA[TIPO EMPLEADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="cf6ac524-5923-4615-82f8-28a84c09f072" x="204" y="0" width="67" height="20"/>
+				<textElement/>
+				<text><![CDATA[TELEFONO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4bc02dd5-ff1c-4532-b14b-6a4b72c6cb80" x="367" y="0" width="48" height="20"/>
+				<textElement/>
+				<text><![CDATA[ESTATUS ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dd640abf-5b66-47d2-af64-e8a9738f7500" x="472" y="0" width="95" height="20"/>
+				<textElement/>
+				<text><![CDATA[DEPARTAMENTO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="7c2462b1-acc6-4d79-a15f-155cea15a772" x="0" y="0" width="31" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a39b9e95-6b49-4714-b9aa-a1b686a9e0f4" x="31" y="0" width="173" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{nombre} + " " + $F{apellidoPaterno} + " " + $F{apellidoMaterno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d6c01229-4951-4a6f-8a70-42edaf3ba147" x="275" y="0" width="82" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{tipoEmpleado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a45c6bb9-cb80-48fc-af9d-77e7a3104648" x="204" y="0" width="67" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{telefono}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="54c563b5-565a-4d02-baa0-dd31b53b11ba" x="367" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{estatusEmpleado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="70cf9461-ed12-492b-bb02-e4000c05426a" x="467" y="0" width="88" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{departamento}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

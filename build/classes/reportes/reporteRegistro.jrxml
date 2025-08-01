@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d673b88e-5f4b-429a-8b64-a3c0016d9b7d">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="NOMBRE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[call sistemalectorrfid.`REGISTROS EMPLEADOS`($P{NOMBRE});]]>
+	</queryString>
+	<field name="id_registro" class="java.lang.Integer"/>
+	<field name="uid" class="java.lang.String"/>
+	<field name="nombre_empleado" class="java.lang.String"/>
+	<field name="apellidoPaterno" class="java.lang.String"/>
+	<field name="apellidoMaterno" class="java.lang.String"/>
+	<field name="fecha_entrada" class="java.sql.Timestamp"/>
+	<field name="fecha_salida" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="32">
+			<staticText>
+				<reportElement uuid="535c6629-6873-428a-abae-670797e59c95" x="217" y="0" width="126" height="20"/>
+				<textElement/>
+				<text><![CDATA[REPORTE DE REGISTRO]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="00bdaaa9-449f-4bec-9eb9-ea8bbce89321" x="3" y="2" width="23" height="20"/>
+				<textElement/>
+				<text><![CDATA[ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="742dc5b2-5573-49fb-beb0-10fb02011c80" x="100" y="0" width="86" height="34"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[IDENTIFICADOR USUARIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a6ebe616-9c5d-4e6d-a1a6-c92857cbc746" x="217" y="2" width="126" height="20"/>
+				<textElement/>
+				<text><![CDATA[NOMBRE COMPLETO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="db11f77c-4232-4fde-b3a5-1e88768b79ac" x="361" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[FECHA ENTRADA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="777aa231-d996-43f1-af78-d8b6e22c190a" x="479" y="0" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[FECHA SALIDA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement uuid="28a2f303-d093-4d8b-b248-f9859791b07c" x="0" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{id_registro}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a14667b5-f7d7-444c-b08d-dc3770248f92" x="100" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{uid}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="04e10089-23d5-4428-8cd6-abc8854a122e" x="203" y="0" width="158" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{nombre_empleado} + " " + $F{apellidoPaterno} + " " + $F{apellidoMaterno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2cd43641-dbb4-47a6-823f-b6601f6aab37" x="361" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{fecha_entrada}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8cff7909-3efd-4c54-a960-56fac8dad616" x="479" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{fecha_salida}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
