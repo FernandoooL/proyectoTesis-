@@ -4,8 +4,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="14"/>
 	<queryString>
-		<![CDATA[call sistemalectorrfid.obtenerEmpleadosResumen();
-]]>
+		<![CDATA[call sistemalectorrfid.obtenerEmpleadosResumen();]]>
 	</queryString>
 	<field name="uid" class="java.lang.String"/>
 	<field name="nombreCompleto" class="java.lang.String"/>

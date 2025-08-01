@@ -34,6 +34,7 @@ public class ventanaCredencial extends javax.swing.JFrame {
         cargarEmpleados();
     }
 
+    
     private void cargarEmpleados() {
     try (Connection conn = ConexionBD()) {
         String sql = "SELECT id, nombre, apellidoPaterno, apellidoMaterno FROM empleados";
@@ -151,13 +152,20 @@ public class ventanaCredencial extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-   ItemCombo seleccionado = (ItemCombo) jcbNombre.getSelectedItem();
-if (seleccionado == null) {
-    JOptionPane.showMessageDialog(null, "Debe seleccionar un empleado");
-    return;
-}
-int id = seleccionado.getId();
-// Usa este id para tu consulta o reporte
+ ItemCombo seleccionado = (ItemCombo) jcbNombre.getSelectedItem();
+
+    if (seleccionado == null || seleccionado.getId() == -1) {
+        JOptionPane.showMessageDialog(this, "⚠️ Selecciona un empleado válido.");
+        return;
+    }
+
+        try {
+            generarReporte(String.valueOf(seleccionado.getId()));
+        } catch (SQLException ex) {
+            Logger.getLogger(ventanaCredencial.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ventanaCredencial.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     
@@ -201,7 +209,31 @@ int id = seleccionado.getId();
     // End of variables declaration//GEN-END:variables
 
     private void generarReporte(String idStr) throws SQLException, IOException {
-    
+ try {
+        int id = Integer.parseInt(idStr);
+        Connection con = ConexionBD();
+
+        if (con == null) {
+            JOptionPane.showMessageDialog(this, "❌ No se pudo conectar a la base de datos.");
+            return;
+        }
+
+        String ruta = "src/reportes/reporteCredenciales.jasper";
+
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("idEmpleado", id); // Debe coincidir con el nombre del parámetro en el .jasper
+
+        JasperPrint print = JasperFillManager.fillReport(ruta, parametros, con);
+        JasperViewer.viewReport(print, false);
+
+        con.close();
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "⚠️ ID inválido.");
+    } catch (JRException | SQLException e) {
+        JOptionPane.showMessageDialog(this, "❌ Error al generar el reporte: " + e.getMessage());
+        e.printStackTrace();
+    }
 }
     
     private Connection ConexionBD() {
