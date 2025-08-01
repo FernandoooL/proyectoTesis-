@@ -2,6 +2,7 @@ package modulos;
 
 import conexion.ConexionBD;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +17,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import static javax.swing.text.html.HTML.Tag.SELECT;
 import modulos.nuevoEmpleado.ItemCombo;
@@ -59,6 +62,58 @@ public class ventanaCredencial extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Error al cargar nombres: " + e.getMessage());
     }
 }
+
+    private void generarReporte(int ID) {
+         try (Connection con = ConexionBD()) {
+        if (con == null) {
+            JOptionPane.showMessageDialog(this, "❌ No se pudo conectar a la base de datos.");
+            return;
+        }
+
+        BufferedImage imagen = null;
+        String sql = "SELECT fotografia FROM empleados WHERE id = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, ID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    byte[] bytes = rs.getBytes("fotografia");
+                    if (bytes != null) {
+                        try (InputStream is = new ByteArrayInputStream(bytes)) {
+                            imagen = ImageIO.read(is);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (imagen == null) {
+            JOptionPane.showMessageDialog(this, "❌ No se encontró la imagen del empleado.");
+            return;
+        }
+
+        // Mostrar la imagen en un diálogo para validar
+//        JOptionPane.showMessageDialog(null, new JLabel(new ImageIcon(imagen)), "Foto del empleado", JOptionPane.PLAIN_MESSAGE);
+
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("ID", ID);
+        parametros.put("FOTOGRAFIA", imagen);
+
+        // Cargar reporte desde recurso (asegúrate que el .jasper está en la ruta correcta)
+        InputStream reporteStream = getClass().getResourceAsStream("/reportes/reporteCredenciales.jasper");
+        if (reporteStream == null) {
+            JOptionPane.showMessageDialog(this, "❌ No se encontró el archivo reporteCredenciales.jasper");
+            return;
+        }
+
+        JasperPrint print = JasperFillManager.fillReport(reporteStream, parametros, con);
+        JasperViewer.viewReport(print, false);
+
+    } catch (JRException | SQLException | IOException e) {
+        JOptionPane.showMessageDialog(null, "❌ Error al generar el reporte: " + e.getMessage());
+        e.printStackTrace();
+    }
+    }
+
     
    public class ItemCombo {
     private int id;
@@ -152,20 +207,14 @@ public class ventanaCredencial extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
- ItemCombo seleccionado = (ItemCombo) jcbNombre.getSelectedItem();
+   ItemCombo seleccionado = (ItemCombo) jcbNombre.getSelectedItem();
 
     if (seleccionado == null || seleccionado.getId() == -1) {
         JOptionPane.showMessageDialog(this, "⚠️ Selecciona un empleado válido.");
         return;
     }
 
-        try {
-            generarReporte(String.valueOf(seleccionado.getId()));
-        } catch (SQLException ex) {
-            Logger.getLogger(ventanaCredencial.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ventanaCredencial.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    generarReporte(seleccionado.getId());
     }//GEN-LAST:event_jButton1ActionPerformed
 
     
@@ -207,34 +256,6 @@ public class ventanaCredencial extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JComboBox jcbNombre;
     // End of variables declaration//GEN-END:variables
-
-    private void generarReporte(String idStr) throws SQLException, IOException {
- try {
-        int id = Integer.parseInt(idStr);
-        Connection con = ConexionBD();
-
-        if (con == null) {
-            JOptionPane.showMessageDialog(this, "❌ No se pudo conectar a la base de datos.");
-            return;
-        }
-
-        String ruta = "src/reportes/reporteCredenciales.jasper";
-
-        Map<String, Object> parametros = new HashMap<>();
-        parametros.put("idEmpleado", id); // Debe coincidir con el nombre del parámetro en el .jasper
-
-        JasperPrint print = JasperFillManager.fillReport(ruta, parametros, con);
-        JasperViewer.viewReport(print, false);
-
-        con.close();
-
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "⚠️ ID inválido.");
-    } catch (JRException | SQLException e) {
-        JOptionPane.showMessageDialog(this, "❌ Error al generar el reporte: " + e.getMessage());
-        e.printStackTrace();
-    }
-}
     
     private Connection ConexionBD() {
           try {

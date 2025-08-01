@@ -2,9 +2,16 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2f07e237-c919-44ee-ac20-79740f9c747a">
 	<property name="ireport.zoom" value="1.464100000000001"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="14"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FOTOGRAFIA" class="java.io.InputStream">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[call sistemalectorrfid.obtenerEmpleadosResumen();]]>
+		<![CDATA[call sistemalectorrfid.obtenerEmpleadosResumen($P{ID});
+]]>
 	</queryString>
 	<field name="uid" class="java.lang.String"/>
 	<field name="nombreCompleto" class="java.lang.String"/>
@@ -50,7 +57,7 @@
 				<textFieldExpression><![CDATA[$F{uid}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement uuid="4ed297c0-054d-4be0-a12a-0ee7a28ab11b" x="50" y="123" width="166" height="162"/>
+				<reportElement uuid="cfbba2f3-e4e8-4c3b-91a3-b7e37a13cf94" x="48" y="124" width="181" height="161"/>
 				<imageExpression><![CDATA[]]></imageExpression>
 			</image>
 		</band>
