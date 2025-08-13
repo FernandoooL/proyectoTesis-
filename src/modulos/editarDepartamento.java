@@ -1,5 +1,6 @@
 package modulos;
 
+import java.awt.Frame;
 import javax.swing.JOptionPane;
 import modelo.Departamento;
 import modelo.DepartamentoDao;
@@ -108,8 +109,13 @@ public class editarDepartamento extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNombreActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-       principal p = new principal();
-    p.setVisible(true);
+        this.dispose(); // Cierra la ventana actual
+    for (Frame f : Frame.getFrames()) {
+        if (f instanceof principal) {
+            f.setVisible(true); // Muestra la existente si ya está creada
+            return;
+        }
+    }
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed

@@ -1,5 +1,6 @@
 package modulos;
 
+import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -47,7 +48,7 @@ public class editarPerfil extends javax.swing.JFrame {
         lblDescripcion.setText("DESCRIPCION:");
 
         btnAceptar.setBackground(new java.awt.Color(0, 255, 255));
-        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/aceptar.png"))); // NOI18N
+        btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/disquete.png"))); // NOI18N
         btnAceptar.setText("GUARDAR");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -115,8 +116,13 @@ public class editarPerfil extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        principal p = new principal();
-    p.setVisible(true);
+        this.dispose(); // Cierra la ventana actual
+    for (Frame f : Frame.getFrames()) {
+        if (f instanceof principal) {
+            f.setVisible(true); // Muestra la existente si ya está creada
+            return;
+        }
+    }
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed

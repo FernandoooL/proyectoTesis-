@@ -1,6 +1,7 @@
 package modulos;
 
 import conexion.ConexionBD;
+import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -21,6 +22,11 @@ import net.sf.jasperreports.view.JasperViewer;
 
 public class reporteRegistro extends javax.swing.JFrame {
 
+      ConexionBD cn = new ConexionBD();
+   Connection con;
+    
+    ResultSet rs;
+    PreparedStatement ps;
     
     public reporteRegistro() {
         initComponents();
@@ -29,9 +35,6 @@ public class reporteRegistro extends javax.swing.JFrame {
     }
 
   private void cargarNombres() {
- String url = "jdbc:mysql://localhost/sistemaLectorRFID";
-String usuario = "root";
-String contraseña = "";
 
 
 String sql = "SELECT DISTINCT CONCAT(e.nombre, ' ', e.apellidoPaterno, ' ', e.apellidoMaterno) AS nombreCompleto " +
@@ -39,8 +42,8 @@ String sql = "SELECT DISTINCT CONCAT(e.nombre, ' ', e.apellidoPaterno, ' ', e.ap
              "JOIN empleados e ON r.uid = e.uid " +
              "ORDER BY nombreCompleto ASC";
 
-try (Connection conn = DriverManager.getConnection(url, usuario, contraseña);
-     PreparedStatement stmt = conn.prepareStatement(sql);
+try (Connection con = ConexionBD.getConnection();
+     PreparedStatement stmt = con.prepareStatement(sql);
      ResultSet rs = stmt.executeQuery()) {
 
     jcbNombre.removeAllItems();
@@ -94,6 +97,11 @@ try (Connection conn = DriverManager.getConnection(url, usuario, contraseña);
         btnRegresar.setBackground(new java.awt.Color(204, 255, 0));
         btnRegresar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/regresar.png"))); // NOI18N
         btnRegresar.setText("REGRESAR");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -149,6 +157,16 @@ try (Connection conn = DriverManager.getConnection(url, usuario, contraseña);
     private void jcbNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbNombreActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jcbNombreActionPerformed
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+            this.dispose(); // Cierra la ventana actual
+    for (Frame f : Frame.getFrames()) {
+        if (f instanceof principal) {
+            f.setVisible(true); // Muestra la existente si ya está creada
+            return;
+        }
+    }
+    }//GEN-LAST:event_btnRegresarActionPerformed
 
    
     public static void main(String args[]) {

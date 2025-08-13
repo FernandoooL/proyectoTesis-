@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 
 public class ConexionBD {
     
-private static final String DB_URL = "jdbc:mysql://localhost:3306/sistemaLectorRFID";
+private static final String DB_URL = "jdbc:mysql://localhost:3306/sistemalectorrfid?serverTimezone=America/Mexico_City";
 
     private static final String USERNAME = "root";
     private static final String PASSWORD = "";

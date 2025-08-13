@@ -1,5 +1,6 @@
 package modulos;
 
+import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -58,6 +59,11 @@ public class nuevoPerfil extends javax.swing.JFrame {
         btnRegresar.setBackground(new java.awt.Color(204, 255, 0));
         btnRegresar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/regresar.png"))); // NOI18N
         btnRegresar.setText("REGRESAR");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -162,6 +168,16 @@ public class nuevoPerfil extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        this.dispose(); // Cierra la ventana actual
+    for (Frame f : Frame.getFrames()) {
+        if (f instanceof principal) {
+            f.setVisible(true); // Muestra la existente si ya está creada
+            return;
+        }
+    }
+    }//GEN-LAST:event_btnRegresarActionPerformed
 
     
     public static void main(String args[]) {

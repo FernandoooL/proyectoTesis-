@@ -1,5 +1,7 @@
 package modulos;
 
+import conexion.ConexionBD;
+import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,7 +11,11 @@ import javax.swing.JOptionPane;
 
 
 public class nuevoUsuario extends javax.swing.JFrame {
-
+ConexionBD cn = new ConexionBD();
+   Connection con;
+    
+    ResultSet rs;
+PreparedStatement ps;
     
     public nuevoUsuario() {
         initComponents();
@@ -19,9 +25,9 @@ public class nuevoUsuario extends javax.swing.JFrame {
     }
 
     private void cargarPerfil() {
-    try (Connection conn = ConexionBD()) {
+    try (Connection con = ConexionBD.getConnection()) {
         String sql = "SELECT nombre FROM perfiles";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
 
         jbcPerfil.removeAllItems();
@@ -37,9 +43,9 @@ public class nuevoUsuario extends javax.swing.JFrame {
 }
     
     private void cargarEstatus() {
-    try (Connection conn = ConexionBD()) {
+    try (Connection con = ConexionBD.getConnection()) {
         String sql = "SELECT nombre FROM estatusempleados";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
 
         jbcEstatus.removeAllItems();
@@ -186,8 +192,13 @@ public class nuevoUsuario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        principal p = new principal();
-    p.setVisible(true);
+        this.dispose(); // Cierra la ventana actual
+    for (Frame f : Frame.getFrames()) {
+        if (f instanceof principal) {
+            f.setVisible(true); // Muestra la existente si ya está creada
+            return;
+        }
+    }
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
@@ -207,17 +218,17 @@ public class nuevoUsuario extends javax.swing.JFrame {
         return;
     }
 
-    try (Connection conn = ConexionBD()) {
+    try (Connection con = ConexionBD.getConnection()) {
         // Obtener ID del perfil
         String sqlPerfil = "SELECT id FROM perfiles WHERE nombre = ?";
-        PreparedStatement psPerfil = conn.prepareStatement(sqlPerfil);
+        PreparedStatement psPerfil = con.prepareStatement(sqlPerfil);
         psPerfil.setString(1, perfilNombre);
         ResultSet rsPerfil = psPerfil.executeQuery();
         int idPerfil = rsPerfil.next() ? rsPerfil.getInt("id") : -1;
 
         // Obtener ID del estatus
         String sqlEstatus = "SELECT id FROM estatusempleados WHERE nombre = ?";
-        PreparedStatement psEstatus = conn.prepareStatement(sqlEstatus);
+        PreparedStatement psEstatus = con.prepareStatement(sqlEstatus);
         psEstatus.setString(1, estatusNombre);
         ResultSet rsEstatus = psEstatus.executeQuery();
         int idEstatus = rsEstatus.next() ? rsEstatus.getInt("id") : -1;
@@ -229,7 +240,7 @@ public class nuevoUsuario extends javax.swing.JFrame {
 
         // Insertar el nuevo usuario
         String sqlInsert = "INSERT INTO usuarios (nombre, contrasenia, idPerfil, activo) VALUES (?, ?, ?, ?)";
-        PreparedStatement psInsert = conn.prepareStatement(sqlInsert);
+        PreparedStatement psInsert = con.prepareStatement(sqlInsert);
         psInsert.setString(1, nombre);
         psInsert.setString(2, contra); // En producción, deberías cifrar la contraseña.
         psInsert.setInt(3, idPerfil);
@@ -302,17 +313,5 @@ public class nuevoUsuario extends javax.swing.JFrame {
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 
-    private Connection ConexionBD() {
-        try {
-        Class.forName("com.mysql.cj.jdbc.Driver"); // Asegúrate de tener el driver en tu proyecto
-        return DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/sistemaLectorRFID", // Cambia "mi_basedatos" por el nombre de tu base de datos
-            "root",                                  // Cambia "usuario" por tu nombre de usuario
-            ""                                // Cambia "contraseña" por tu contraseña
-        );
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error de conexión: " + e.getMessage());
-        return null;
-    }
-    }
+
 }

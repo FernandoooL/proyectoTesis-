@@ -1,6 +1,7 @@
 package modulos;
 
 import conexion.ConexionBD;
+import java.awt.Frame;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -31,6 +32,12 @@ import net.sf.jasperreports.view.JasperViewer;
 
 public class ventanaCredencial extends javax.swing.JFrame {
   
+  ConexionBD cn = new ConexionBD();
+   Connection con;
+    
+    ResultSet rs;
+    PreparedStatement ps;
+    
     public ventanaCredencial() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -39,9 +46,9 @@ public class ventanaCredencial extends javax.swing.JFrame {
 
     
     private void cargarEmpleados() {
-    try (Connection conn = ConexionBD()) {
+    try (Connection con = ConexionBD.getConnection()) {
         String sql = "SELECT id, nombre, apellidoPaterno, apellidoMaterno FROM empleados";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
 
         jcbNombre.removeAllItems();
@@ -63,57 +70,79 @@ public class ventanaCredencial extends javax.swing.JFrame {
     }
 }
 
-    private void generarReporte(int ID) {
-         try (Connection con = ConexionBD()) {
-        if (con == null) {
-            JOptionPane.showMessageDialog(this, "❌ No se pudo conectar a la base de datos.");
-            return;
-        }
 
-        BufferedImage imagen = null;
-        String sql = "SELECT fotografia FROM empleados WHERE id = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, ID);
+
+    public void generarCredencial(int idEmpleado) {
+        try (Connection conexion = ConexionBD.getConnection()) {
+            if (conexion == null) {
+                mostrarError("No se pudo conectar a la base de datos");
+                return;
+            }
+
+            // 1. Obtener imágenes de frente (id=1) y atrás (id=2)
+            InputStream isFrente = obtenerImagenDeTabla(conexion, 1);
+            InputStream isAtras = obtenerImagenDeTabla(conexion, 2);
+
+            BufferedImage frente = ImageIO.read(isFrente);
+            BufferedImage atras = ImageIO.read(isAtras);
+
+            
+            if (frente == null || atras == null) {
+                mostrarError("No se encontraron las imágenes de fondo en la tabla 'imagen'");
+                return;
+            }
+
+            // 2. Preparar parámetros
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("ID", idEmpleado);
+            parametros.put("FONDO_FRENTE", frente);
+            parametros.put("FONDO_REVERSO", atras);
+
+            // 3. Generar reporte
+            InputStream reporteStream = getClass().getResourceAsStream("/reportes/reporteCredenciales.jasper");
+            if (reporteStream == null) {
+                mostrarError("No se encontró el archivo del reporte");
+                return;
+            }
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(reporteStream, parametros, conexion);
+            
+            // 4. Mostrar resultado
+            mostrarReporte(jasperPrint);
+
+        } catch (Exception e) {
+            mostrarError("Error al generar credencial: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private InputStream obtenerImagenDeTabla(Connection conexion, int idImagen) throws SQLException {
+        String sql = "SELECT imagen FROM imagen WHERE id = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idImagen);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    byte[] bytes = rs.getBytes("fotografia");
-                    if (bytes != null) {
-                        try (InputStream is = new ByteArrayInputStream(bytes)) {
-                            imagen = ImageIO.read(is);
-                        }
-                    }
+                    byte[] bytes = rs.getBytes("imagen");
+                    return bytes != null ? new ByteArrayInputStream(bytes) : null;
                 }
             }
         }
-
-        if (imagen == null) {
-            JOptionPane.showMessageDialog(this, "❌ No se encontró la imagen del empleado.");
-            return;
-        }
-
-        // Mostrar la imagen en un diálogo para validar
-//        JOptionPane.showMessageDialog(null, new JLabel(new ImageIcon(imagen)), "Foto del empleado", JOptionPane.PLAIN_MESSAGE);
-
-        Map<String, Object> parametros = new HashMap<>();
-        parametros.put("ID", ID);
-        parametros.put("FOTOGRAFIA", imagen);
-
-        // Cargar reporte desde recurso (asegúrate que el .jasper está en la ruta correcta)
-        InputStream reporteStream = getClass().getResourceAsStream("/reportes/reporteCredenciales.jasper");
-        if (reporteStream == null) {
-            JOptionPane.showMessageDialog(this, "❌ No se encontró el archivo reporteCredenciales.jasper");
-            return;
-        }
-
-        JasperPrint print = JasperFillManager.fillReport(reporteStream, parametros, con);
-        JasperViewer.viewReport(print, false);
-
-    } catch (JRException | SQLException | IOException e) {
-        JOptionPane.showMessageDialog(null, "❌ Error al generar el reporte: " + e.getMessage());
-        e.printStackTrace();
-    }
+        return null;
     }
 
+    private void mostrarReporte(JasperPrint jasperPrint) {
+        JasperViewer viewer = new JasperViewer(jasperPrint, false);
+        viewer.setTitle("Credencial de Empleado");
+        viewer.setVisible(true);
+    }
+
+    private void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(null, 
+            "❌ " + mensaje, 
+            "Error", 
+            JOptionPane.ERROR_MESSAGE);
+    }
+    
     
    public class ItemCombo {
     private int id;
@@ -154,6 +183,7 @@ public class ventanaCredencial extends javax.swing.JFrame {
 
         jcbNombre.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        jButton1.setBackground(new java.awt.Color(102, 255, 255));
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/credencial(1).png"))); // NOI18N
         jButton1.setText("IMPRIMIR CREDENCIALES");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -162,8 +192,14 @@ public class ventanaCredencial extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setBackground(new java.awt.Color(153, 255, 51));
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/regresar.png"))); // NOI18N
         jButton2.setText("REGRESAR");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -214,8 +250,19 @@ public class ventanaCredencial extends javax.swing.JFrame {
         return;
     }
 
-    generarReporte(seleccionado.getId());
+    generarCredencial(seleccionado.getId());
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        this.dispose(); // Cierra la ventana actual
+
+    for (Frame f : Frame.getFrames()) {
+        if (f instanceof principal) {
+            f.setVisible(true); // Muestra la existente si ya está creada
+            return;
+        }
+    }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     
     public static void main(String args[]) {
@@ -257,17 +304,17 @@ public class ventanaCredencial extends javax.swing.JFrame {
     private javax.swing.JComboBox jcbNombre;
     // End of variables declaration//GEN-END:variables
     
-    private Connection ConexionBD() {
-          try {
-        Class.forName("com.mysql.cj.jdbc.Driver"); // Asegúrate de tener el driver en tu proyecto
-        return DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/sistemaLectorRFID", // Cambia "mi_basedatos" por el nombre de tu base de datos
-            "root",                                  // Cambia "usuario" por tu nombre de usuario
-            ""                                // Cambia "contraseña" por tu contraseña
-        );
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error de conexión: " + e.getMessage());
-        return null;
-    }
-    }
+//    private Connection ConexionBD() {
+//          try {
+//        Class.forName("com.mysql.cj.jdbc.Driver"); // Asegúrate de tener el driver en tu proyecto
+//        return DriverManager.getConnection(
+//            "jdbc:mysql://localhost:3306/sistemaLectorRFID", // Cambia "mi_basedatos" por el nombre de tu base de datos
+//            "root",                                  // Cambia "usuario" por tu nombre de usuario
+//            ""                                // Cambia "contraseña" por tu contraseña
+//        );
+//    } catch (Exception e) {
+//        JOptionPane.showMessageDialog(this, "Error de conexión: " + e.getMessage());
+//        return null;
+//    }
+//    }
 }

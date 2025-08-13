@@ -1,5 +1,6 @@
 package modulos;
 
+import java.awt.Frame;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.Date;
@@ -243,8 +244,13 @@ public class empleados extends javax.swing.JFrame {
     }
     
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        principal p = new principal();
-    p.setVisible(true);
+        this.dispose(); // Cierra la ventana actual
+    for (Frame f : Frame.getFrames()) {
+        if (f instanceof principal) {
+            f.setVisible(true); // Muestra la existente si ya está creada
+            return;
+        }
+    }
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void tblEmpleadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEmpleadoMouseClicked

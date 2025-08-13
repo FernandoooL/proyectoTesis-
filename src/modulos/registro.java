@@ -1,5 +1,7 @@
 package modulos;
 
+import conexion.ConexionBD;
+import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -22,11 +24,16 @@ import javax.swing.table.TableModel;
 
 public class registro extends javax.swing.JFrame {
 
+      ConexionBD cn = new ConexionBD();
+   Connection con;
+    
+    ResultSet rs;
+    PreparedStatement ps;
     
     public registro() {
         initComponents();
         this.setLocationRelativeTo(null);
-        cargarUsuarios();
+       cargarUsuarios();
     }
 
     
@@ -51,7 +58,7 @@ public class registro extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) tblIni.getModel();
         modelo.setRowCount(0);
 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sistemaLectorRFID?serverTimezone=America/Mexico_City", "root", "")) {
+        try (Connection con = ConexionBD.getConnection()) {
             String usuarioSeleccionado = jComboBox1.getSelectedItem().toString();
             java.util.Date desde = jdcD.getDate();
             java.util.Date hasta = jdcH.getDate();
@@ -92,7 +99,7 @@ public class registro extends javax.swing.JFrame {
 
             sql.append(" ORDER BY fecha_entrada ASC");
 
-            PreparedStatement ps = conn.prepareStatement(sql.toString());
+            PreparedStatement ps = con.prepareStatement(sql.toString());
 
             for (int i = 0; i < parametros.size(); i++) {
                 Object param = parametros.get(i);
@@ -173,6 +180,11 @@ public class registro extends javax.swing.JFrame {
         lblUsuarios.setText("USUARIOS:");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         lblD.setText("DESDE:");
 
@@ -249,9 +261,18 @@ public class registro extends javax.swing.JFrame {
     }//GEN-LAST:event_btnFiltrarActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-       principal p = new principal();
-    p.setVisible(true);
+        this.dispose(); // Cierra la ventana actual
+    for (Frame f : Frame.getFrames()) {
+        if (f instanceof principal) {
+            f.setVisible(true); // Muestra la existente si ya está creada
+            return;
+        }
+    }
     }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     
     public static void main(String args[]) {
