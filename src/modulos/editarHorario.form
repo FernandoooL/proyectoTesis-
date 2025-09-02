@@ -25,43 +25,33 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
-                      <Component id="lblLunes" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblMiercoles" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblMartes" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblJueves" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                              <Component id="lblSabado" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblViernes" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                  </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="txtNombre" min="-2" pref="405" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="52" pref="52" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="lblDia" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblMiercoles" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblJueves" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblMartes" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="txtNombre" min="-2" pref="405" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                              <Component id="lblViernes" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="lblDia" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="360" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="txtEnLunes" min="-2" pref="100" max="-2" attributes="0"/>
-                                  <Component id="lblEntrada" min="-2" max="-2" attributes="0"/>
-                                  <Component id="txtEnMartes" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
-                                  <Component id="txtEnMiercoles" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
-                                  <Component id="txtEnJueves" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
-                                  <Component id="txtEnViernes" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
-                                  <Component id="txtEnSabado" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="lblLunes" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="360" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="lblEntrada" min="-2" max="-2" attributes="0"/>
+                          <Component id="jSpinnerHora2" alignment="1" pref="100" max="32767" attributes="0"/>
+                          <Component id="jSpinnerHora3" alignment="1" max="32767" attributes="0"/>
+                          <Component id="jSpinnerHora5" alignment="1" max="32767" attributes="0"/>
+                          <Component id="jSpinnerHora6" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jSpinnerHora8" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -71,17 +61,15 @@
                       <Component id="btnAceptar" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtSaLunes" min="-2" pref="100" max="-2" attributes="0"/>
                           <Component id="lblSalida" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtSaMartes" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
-                          <Component id="txtSaMiercoles" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
-                          <Component id="txtSaJueves" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
-                          <Component id="txtSaViernes" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
-                          <Component id="txtSaSabado" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
+                          <Component id="jSpinnerHora" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
+                          <Component id="jSpinnerHora1" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
+                          <Component id="jSpinnerHora4" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jSpinnerHora7" alignment="1" max="32767" attributes="0"/>
+                          <Component id="jSpinnerHora9" alignment="1" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="22" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace min="-2" pref="93" max="-2" attributes="0"/>
@@ -93,125 +81,116 @@
                   <Component id="jCheckBox3" alignment="1" min="-2" max="-2" attributes="0"/>
                   <Component id="jCheckBox4" alignment="1" min="-2" max="-2" attributes="0"/>
                   <Component id="jCheckBox5" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Component id="jCheckBox6" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="223" max="32767" attributes="0"/>
+              <EmptySpace pref="25" max="32767" attributes="0"/>
           </Group>
-          <Group type="102" attributes="0">
-              <EmptySpace min="-2" pref="398" max="-2" attributes="0"/>
-              <Component id="lblE" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="365" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="lblE" min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="153" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="lblDia" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblEntrada" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblSalida" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblLaborable" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="txtEnLunes" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="txtSaLunes" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="jCheckBox1" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="lblLunes" alignment="1" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="txtNombre" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnAceptar" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnRegresar" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-              </Group>
-              <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblMartes" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
-                              <Component id="txtEnMartes" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                              <Component id="txtSaMartes" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Component id="lblMiercoles" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="txtEnMiercoles" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="txtSaMiercoles" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jCheckBox4" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblJueves" min="-2" max="-2" attributes="0"/>
-                                  <Component id="txtSaJueves" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Component id="txtEnJueves" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
-                              <Component id="jCheckBox3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                  </Group>
-                  <Component id="jCheckBox2" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace min="27" pref="27" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="txtEnViernes" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtSaViernes" min="-2" max="-2" attributes="0"/>
-                  <Component id="lblViernes" min="-2" max="-2" attributes="0"/>
-                  <Component id="jCheckBox5" min="-2" max="-2" attributes="0"/>
-              </Group>
               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jCheckBox6" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblSabado" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtEnSabado" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtSaSabado" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="jSpinnerHora9" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="127" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+                                      <Component id="lblLunes" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jSpinnerHora2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Group type="103" groupAlignment="3" attributes="0">
+                                          <Component id="lblDia" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblEntrada" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblSalida" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblLaborable" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" attributes="0">
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Component id="jCheckBox1" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                                              <Component id="jSpinnerHora" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="txtNombre" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnAceptar" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnRegresar" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="lblMartes" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jSpinnerHora1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="jCheckBox2" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jSpinnerHora6" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="lblMiercoles" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jSpinnerHora3" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jSpinnerHora4" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="lblJueves" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jSpinnerHora5" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jSpinnerHora7" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="jCheckBox3" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="jCheckBox4" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblViernes" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jSpinnerHora8" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="jCheckBox5" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
-              <EmptySpace min="0" pref="60" max="32767" attributes="0"/>
+              <EmptySpace min="61" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="lblE">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="EDITAR HORARIO"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JTextField" name="txtNombre">
     </Component>
     <Component class="javax.swing.JButton" name="btnAceptar">
@@ -244,12 +223,12 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblDia">
       <Properties>
-        <Property name="text" type="java.lang.String" value="D&#xcd;A"/>
+        <Property name="text" type="java.lang.String" value="D&#xcd;A DE LA SEMANA: "/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblLaborable">
       <Properties>
-        <Property name="text" type="java.lang.String" value="LABORABLE"/>
+        <Property name="text" type="java.lang.String" value="&#xbf;SE TRABAJA ESTE D&#xcd;A?"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblEntrada">
@@ -269,13 +248,6 @@
         <Property name="text" type="java.lang.String" value="LUNES"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtEnLunes">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtEnLunesActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JTextField" name="txtSaLunes">
-    </Component>
     <Component class="javax.swing.JLabel" name="lblMartes">
       <Properties>
         <Property name="text" type="java.lang.String" value="MARTES"/>
@@ -283,20 +255,12 @@
     </Component>
     <Component class="javax.swing.JCheckBox" name="jCheckBox2">
     </Component>
-    <Component class="javax.swing.JTextField" name="txtEnMartes">
-    </Component>
-    <Component class="javax.swing.JTextField" name="txtSaMartes">
-    </Component>
     <Component class="javax.swing.JLabel" name="lblMiercoles">
       <Properties>
         <Property name="text" type="java.lang.String" value="MIERCOLES"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JCheckBox" name="jCheckBox3">
-    </Component>
-    <Component class="javax.swing.JTextField" name="txtEnMiercoles">
-    </Component>
-    <Component class="javax.swing.JTextField" name="txtSaMiercoles">
     </Component>
     <Component class="javax.swing.JLabel" name="lblJueves">
       <Properties>
@@ -308,33 +272,42 @@
         <Property name="text" type="java.lang.String" value="VIERNES"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblSabado">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="SABADO"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JCheckBox" name="jCheckBox4">
     </Component>
     <Component class="javax.swing.JCheckBox" name="jCheckBox5">
     </Component>
-    <Component class="javax.swing.JCheckBox" name="jCheckBox6">
-    </Component>
-    <Component class="javax.swing.JTextField" name="txtEnJueves">
-    </Component>
-    <Component class="javax.swing.JTextField" name="txtSaJueves">
-    </Component>
-    <Component class="javax.swing.JTextField" name="txtEnViernes">
-    </Component>
-    <Component class="javax.swing.JTextField" name="txtSaViernes">
-    </Component>
-    <Component class="javax.swing.JTextField" name="txtEnSabado">
-    </Component>
-    <Component class="javax.swing.JTextField" name="txtSaSabado">
-    </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="DIA Y HORA:"/>
+        <Property name="text" type="java.lang.String" value="NOMBRE DEL HORARIO GENERADO: "/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel3">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Tahoma" size="26" style="0"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="GESTI&#xd3;N DE HORARIO LABORAL"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="jSpinnerHora">
+    </Component>
+    <Component class="javax.swing.JSpinner" name="jSpinnerHora1">
+    </Component>
+    <Component class="javax.swing.JSpinner" name="jSpinnerHora2">
+    </Component>
+    <Component class="javax.swing.JSpinner" name="jSpinnerHora3">
+    </Component>
+    <Component class="javax.swing.JSpinner" name="jSpinnerHora4">
+    </Component>
+    <Component class="javax.swing.JSpinner" name="jSpinnerHora5">
+    </Component>
+    <Component class="javax.swing.JSpinner" name="jSpinnerHora6">
+    </Component>
+    <Component class="javax.swing.JSpinner" name="jSpinnerHora7">
+    </Component>
+    <Component class="javax.swing.JSpinner" name="jSpinnerHora8">
+    </Component>
+    <Component class="javax.swing.JSpinner" name="jSpinnerHora9">
     </Component>
   </SubComponents>
 </Form>

@@ -304,17 +304,5 @@ public class ventanaCredencial extends javax.swing.JFrame {
     private javax.swing.JComboBox jcbNombre;
     // End of variables declaration//GEN-END:variables
     
-//    private Connection ConexionBD() {
-//          try {
-//        Class.forName("com.mysql.cj.jdbc.Driver"); // Asegúrate de tener el driver en tu proyecto
-//        return DriverManager.getConnection(
-//            "jdbc:mysql://localhost:3306/sistemaLectorRFID", // Cambia "mi_basedatos" por el nombre de tu base de datos
-//            "root",                                  // Cambia "usuario" por tu nombre de usuario
-//            ""                                // Cambia "contraseña" por tu contraseña
-//        );
-//    } catch (Exception e) {
-//        JOptionPane.showMessageDialog(this, "Error de conexión: " + e.getMessage());
-//        return null;
-//    }
-//    }
+
 }

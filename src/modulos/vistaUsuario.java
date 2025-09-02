@@ -1,5 +1,6 @@
 package modulos;
 
+import conexion.ConexionBD;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -37,9 +38,15 @@ import javax.swing.Timer;
 
 
 public class vistaUsuario extends javax.swing.JFrame {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/sistemaLectorRFID";
-    private static final String DB_USER = "root";
-    private static final String DB_PASS = ""; // tu contraseña si tiene
+    
+    ConexionBD cn = new ConexionBD();
+   Connection con;
+   PreparedStatement ps;
+   ResultSet rs;
+   
+//    private static final String DB_URL = "jdbc:mysql://localhost:3306/sistemaLectorRFID";
+//    private static final String DB_USER = "root";
+//    private static final String DB_PASS = ""; // tu contraseña si tiene
     
     private JLabel lblFecha;
     private JLabel lblTitulo;
@@ -51,6 +58,7 @@ public class vistaUsuario extends javax.swing.JFrame {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         setTitle("VISTA USUARIO");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setResizable(false); // comentar en caso de dar problemas
         iniciarReloj();
         iniciarInterfaz();
         txtArea.setVisible(true);
@@ -159,9 +167,9 @@ public class vistaUsuario extends javax.swing.JFrame {
     private void validarAcceso(String uid) {
     if (uid.isEmpty()) return;
 
-    try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+    try (Connection con = ConexionBD.getConnection()) {
         String sql = "SELECT nombre, apellidoPaterno, apellidoMaterno FROM empleados WHERE uid = ?";
-        PreparedStatement stmt = conn.prepareStatement(sql);
+        PreparedStatement stmt = con.prepareStatement(sql);
         stmt.setString(1, uid);
         ResultSet rs = stmt.executeQuery();
 
@@ -171,7 +179,7 @@ public class vistaUsuario extends javax.swing.JFrame {
                                     rs.getString("apellidoMaterno");
 
             String checkSql = "SELECT id FROM registros WHERE uid = ? AND DATE(fecha_entrada) = CURDATE() AND fecha_salida IS NULL";
-            PreparedStatement checkStmt = conn.prepareStatement(checkSql);
+            PreparedStatement checkStmt = con.prepareStatement(checkSql);
             checkStmt.setString(1, uid);
             ResultSet checkRs = checkStmt.executeQuery();
 
@@ -184,7 +192,7 @@ public class vistaUsuario extends javax.swing.JFrame {
                 // Registrar salida
                 int registroId = checkRs.getInt("id");
                 String updateSql = "UPDATE registros SET fecha_salida = NOW() WHERE id = ?";
-                PreparedStatement updateStmt = conn.prepareStatement(updateSql);
+                PreparedStatement updateStmt = con.prepareStatement(updateSql);
                 updateStmt.setInt(1, registroId);
                 updateStmt.executeUpdate();
 
@@ -199,7 +207,7 @@ public class vistaUsuario extends javax.swing.JFrame {
             } else {
                 // Registrar entrada
                 String insertSql = "INSERT INTO registros (uid, nombre, fecha_entrada) VALUES (?, ?, NOW())";
-                PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+                PreparedStatement insertStmt = con.prepareStatement(insertSql);
                 insertStmt.setString(1, uid);
                 insertStmt.setString(2, nombreCompleto);
                 insertStmt.executeUpdate();
@@ -267,6 +275,7 @@ public class vistaUsuario extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel1 = new javax.swing.JPanel();
         lblNombre = new javax.swing.JLabel();
@@ -276,7 +285,7 @@ public class vistaUsuario extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         jPanel1.setBackground(new java.awt.Color(0, 255, 255));
 
@@ -297,8 +306,21 @@ public class vistaUsuario extends javax.swing.JFrame {
             .addComponent(lblNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 900, 1230, 260));
-        getContentPane().add(txtArea, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 880, -1, 10));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.ipadx = 341;
+        gridBagConstraints.ipady = 216;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 14, 13, 466);
+        getContentPane().add(jPanel1, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipady = -16;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(880, 450, 0, 0);
+        getContentPane().add(txtArea, gridBagConstraints);
 
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cerrar-sesion.png"))); // NOI18N
         jMenu1.setText("CERRAR SESION");

@@ -111,7 +111,7 @@ public class editarDepartamento extends javax.swing.JFrame {
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         this.dispose(); // Cierra la ventana actual
     for (Frame f : Frame.getFrames()) {
-        if (f instanceof principal) {
+        if (f instanceof departamento) {
             f.setVisible(true); // Muestra la existente si ya está creada
             return;
         }

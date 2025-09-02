@@ -1,5 +1,6 @@
 package modulos;
 
+import conexion.ConexionBD;
 import java.awt.Frame;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -17,6 +18,13 @@ import modelo.Empleado;
 import modelo.EmpleadoDao;
 
 public class empleados extends javax.swing.JFrame {
+       ConexionBD cn = new ConexionBD();
+   Connection con;
+   PreparedStatement ps;
+   ResultSet rs;
+   
+    
+    
 
     Empleado vEmpleado = new Empleado();
     EmpleadoDao vEmpleadoDao = new EmpleadoDao();
@@ -195,18 +203,11 @@ public class empleados extends javax.swing.JFrame {
 //    DefaultTableModel modelo = (DefaultTableModel) tblEmpleado  .getModel();
     modelo.setRowCount(0); // Limpiar la tabla antes de cargar nuevos datos
 
-    Connection conn = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-
-    try {
-        String url = "jdbc:mysql://localhost:3306/sistemaLectorRFID";
-        String user = "root";
-        String password = "";
-
-        conn = DriverManager.getConnection(url, user, password);
+     try {
+      
+       Connection con = ConexionBD.getConnection();
         String sql = "SELECT id, uid, idTipoEmpleado, idEstatusEmpleado, idDepartamento, idHorario, nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, domicilio, telefono, curp, observaciones FROM empleados";
-        ps = conn.prepareStatement(sql);
+        ps = con.prepareStatement(sql);
         rs = ps.executeQuery();
 
         while (rs.next()) {
@@ -236,7 +237,7 @@ public class empleados extends javax.swing.JFrame {
         try {
             if (rs != null) rs.close();
             if (ps != null) ps.close();
-            if (conn != null) conn.close();
+            if (con != null) con.close();
         } catch (SQLException ex) {
             // Ignorar errores de cierre
         }

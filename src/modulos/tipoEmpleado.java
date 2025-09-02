@@ -1,5 +1,6 @@
 package modulos;
 
+import conexion.ConexionBD;
 import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,6 +16,11 @@ import modelo.TipoEmpleadoDao;
 
 public class tipoEmpleado extends javax.swing.JFrame {
 
+   ConexionBD cn = new ConexionBD();
+   Connection con;
+   PreparedStatement ps;
+   ResultSet rs;
+   
     TipoEmpleado vtipoEmpleado = new TipoEmpleado();
     TipoEmpleadoDao vtipoEmpleadoDao = new TipoEmpleadoDao();
     private DefaultTableModel modelo;
@@ -169,8 +175,8 @@ public class tipoEmpleado extends javax.swing.JFrame {
     DefaultTableModel modelo = (DefaultTableModel) tblTipo.getModel();
     modelo.setRowCount(0); // Limpiar tabla
 
-    try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sistemaLectorRFID", "root", "");
-         PreparedStatement ps = conn.prepareStatement("SELECT id, nombre FROM tiposempleados");
+    try ( Connection con = ConexionBD.getConnection();
+         PreparedStatement ps = con.prepareStatement("SELECT id, nombre FROM tiposempleados");
          ResultSet rs = ps.executeQuery()) {
 
         while (rs.next()) {

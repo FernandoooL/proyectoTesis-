@@ -35,31 +35,29 @@ public class reporteRegistro extends javax.swing.JFrame {
     }
 
   private void cargarNombres() {
+ String sql = "SELECT DISTINCT CONCAT(e.nombre, ' ', e.apellidoPaterno, ' ', e.apellidoMaterno) AS nombreCompleto " +
+                 "FROM registros r " +
+                 "JOIN empleados e ON r.uid = e.uid " +
+                 "ORDER BY nombreCompleto ASC";
 
+    try (Connection con = ConexionBD.getConnection();
+         PreparedStatement stmt = con.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
 
-String sql = "SELECT DISTINCT CONCAT(e.nombre, ' ', e.apellidoPaterno, ' ', e.apellidoMaterno) AS nombreCompleto " +
-             "FROM registros r " +
-             "JOIN empleados e ON r.uid = e.uid " +
-             "ORDER BY nombreCompleto ASC";
+        jcbNombre.removeAllItems();
+        jcbNombre.addItem("TODOS");
 
-try (Connection con = ConexionBD.getConnection();
-     PreparedStatement stmt = con.prepareStatement(sql);
-     ResultSet rs = stmt.executeQuery()) {
-
-    jcbNombre.removeAllItems();
-    jcbNombre.addItem("TODOS");
-
-    while (rs.next()) {
-        String nombreCompleto = rs.getString("nombreCompleto");
-        if (nombreCompleto != null) {
-            jcbNombre.addItem(nombreCompleto.trim());
+        while (rs.next()) {
+            String nombreCompleto = rs.getString("nombreCompleto");
+            if (nombreCompleto != null) {
+                jcbNombre.addItem(nombreCompleto.trim());
+            }
         }
-    }
 
-} catch (SQLException e) {
-    System.err.println("Error al cargar nombres completos:");
-    e.printStackTrace();
-}
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error al cargar nombres completos:\n" + e.getMessage());
+    }
 }
     
     @SuppressWarnings("unchecked")
@@ -146,12 +144,13 @@ try (Connection con = ConexionBD.getConnection();
 
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
         try {
-            generarReporte(jcbNombre.getSelectedItem().toString());
-            
-           
-        } catch (SQLException ex) {
-            Logger.getLogger(reporteRegistro.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        String nombreSeleccionado = jcbNombre.getSelectedItem() != null ?
+                                    jcbNombre.getSelectedItem().toString().trim() : "TODOS";
+        generarReporte(nombreSeleccionado);
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "❌ Error al generar el reporte:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        ex.printStackTrace();
+    }
     }//GEN-LAST:event_btnReporteActionPerformed
 
     private void jcbNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbNombreActionPerformed
@@ -214,17 +213,18 @@ try (Connection con = ConexionBD.getConnection();
     Connection con = null;
 
     try {
+        // Conexión a la base de datos
         con = cn.getConnection();
-
         if (con == null) {
             JOptionPane.showMessageDialog(null, "❌ No se pudo conectar a la base de datos.");
             return;
         }
 
+        // Ruta del archivo .jasper
         String dir_current = System.getProperty("user.dir");
         String fileName = dir_current + "\\src\\reportes\\reporteRegistro.jasper";
 
-        // Verifica si el archivo existe
+        // Verificar si el archivo existe
         java.io.File archivo = new java.io.File(fileName);
         if (!archivo.exists()) {
             JOptionPane.showMessageDialog(null, "❌ No se encontró el archivo del reporte:\n" + fileName);
@@ -233,19 +233,18 @@ try (Connection con = ConexionBD.getConnection();
 
         // Preparar parámetros para el reporte
         Map<String, Object> parametros = new HashMap<>();
-        parametros.put("NOMBRE", NOMBRE);
-        // Si el usuario seleccionó "TODOS", pasamos null para no filtrar
-//        if (NOMBRE.equalsIgnoreCase("TODOS")) {
-//            parametros.put("NOMBRE", "TODOS");
-//        } else {
-//            parametros.put("NOMBRE", NOMBRE);
-//        }
-        
-        // Cargar el reporte con parámetros
+        // Enviar null al reporte si es "TODOS", para que el procedimiento devuelva todos los registros
+        if ("TODOS".equalsIgnoreCase(NOMBRE)) {
+            parametros.put("NOMBRE", "TODOS"); 
+        } else {
+            parametros.put("NOMBRE", NOMBRE); // Filtra por el nombre seleccionado
+        }
+
+        // Cargar y llenar el reporte
         JasperReport reporte = (JasperReport) JRLoader.loadObjectFromFile(fileName);
         JasperPrint impreso = JasperFillManager.fillReport(reporte, parametros, con);
 
-        // Mostrar el visor del reporte
+        // Mostrar visor del reporte
         JasperViewer viewer = new JasperViewer(impreso, false);
         viewer.setTitle("REPORTE DE ENTRADA Y SALIDA");
         viewer.setVisible(true);
@@ -253,12 +252,15 @@ try (Connection con = ConexionBD.getConnection();
     } catch (JRException e) {
         e.printStackTrace();
         JOptionPane.showMessageDialog(null, "❌ Error al generar el reporte:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    } finally {  
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null, "❌ Error de base de datos:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    } finally {
+        // Cerrar conexión
         try {
             if (con != null) con.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "❌ Error al cerrar la conexión:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

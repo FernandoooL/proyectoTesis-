@@ -11,9 +11,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
 import static sun.nio.ch.IOStatus.check;
 
 
@@ -24,60 +29,86 @@ public class editarHorario extends javax.swing.JFrame {
     public editarHorario() {
         initComponents();
         this.setLocationRelativeTo(null);
-        jCheckBox1.addItemListener(e -> actualizarNombreHorario());
-    jCheckBox2.addItemListener(e -> actualizarNombreHorario());
-    jCheckBox3.addItemListener(e -> actualizarNombreHorario());
-    jCheckBox4.addItemListener(e -> actualizarNombreHorario());
-    jCheckBox5.addItemListener(e -> actualizarNombreHorario());
-    jCheckBox6.addItemListener(e -> actualizarNombreHorario());
+        configurarSpinnerHora(jSpinnerHora);
+        configurarSpinnerHora(jSpinnerHora1);
+        configurarSpinnerHora(jSpinnerHora2);
+        configurarSpinnerHora(jSpinnerHora3);
+        configurarSpinnerHora(jSpinnerHora4);
+        configurarSpinnerHora(jSpinnerHora5);
+        configurarSpinnerHora(jSpinnerHora6);
+        configurarSpinnerHora(jSpinnerHora7);
+        configurarSpinnerHora(jSpinnerHora8);
+        configurarSpinnerHora(jSpinnerHora9);
+        actualizarNombreHorario();
+        
+        jCheckBox1.addActionListener(e -> actualizarNombreHorario());
+        jCheckBox2.addActionListener(e -> actualizarNombreHorario());
+        jCheckBox3.addActionListener(e -> actualizarNombreHorario());
+        jCheckBox4.addActionListener(e -> actualizarNombreHorario());
+        jCheckBox5.addActionListener(e -> actualizarNombreHorario());
     }    
     
 private void actualizarNombreHorario() {
     StringBuilder nombre = new StringBuilder();
+    SimpleDateFormat formato = new SimpleDateFormat("HH:mm");
 
+    // Ejemplo para 3 horarios (puedes adaptarlo a 9)
     if (jCheckBox1.isSelected()) {
-        nombre.append("Lun ");
-        if (!txtEnLunes.getText().isEmpty() && !txtSaLunes.getText().isEmpty()) {
-            nombre.append("(").append(txtEnLunes.getText()).append("-").append(txtSaLunes.getText()).append(") ");
-        }
+        nombre.append("LUNES: ").append(formato.format(jSpinnerHora2.getValue()))
+              .append(" LUNES: ").append(formato.format(jSpinnerHora.getValue()))
+              .append(" | ");
     }
-
     if (jCheckBox2.isSelected()) {
-        nombre.append("Mar ");
-        if (!txtEnMartes.getText().isEmpty() && !txtSaMartes.getText().isEmpty()) {
-            nombre.append("(").append(txtEnMartes.getText()).append("-").append(txtSaMartes.getText()).append(") ");
-        }
+        nombre.append("MARTES: ").append(formato.format(jSpinnerHora6.getValue()))
+              .append(" MARTES: ").append(formato.format(jSpinnerHora1.getValue()))
+              .append(" | ");
     }
-
     if (jCheckBox3.isSelected()) {
-        nombre.append("Mié ");
-        if (!txtEnMiercoles.getText().isEmpty() && !txtSaMiercoles.getText().isEmpty()) {
-            nombre.append("(").append(txtEnMiercoles.getText()).append("-").append(txtSaMiercoles.getText()).append(") ");
-        }
+        nombre.append("MIERCOLES: ").append(formato.format(jSpinnerHora3.getValue()))
+              .append(" MIERCOLES: ").append(formato.format(jSpinnerHora4.getValue())).append(" | ");
     }
-
     if (jCheckBox4.isSelected()) {
-        nombre.append("Jue ");
-        if (!txtEnJueves.getText().isEmpty() && !txtSaJueves.getText().isEmpty()) {
-            nombre.append("(").append(txtEnJueves.getText()).append("-").append(txtSaJueves.getText()).append(") ");
-        }
+        nombre.append("JUEVES: ").append(formato.format(jSpinnerHora5.getValue()))
+              .append(" JUEVES: ").append(formato.format(jSpinnerHora7.getValue())).append(" | ");
+    }
+    if (jCheckBox5.isSelected()) {
+        nombre.append("VIERNES: ").append(formato.format(jSpinnerHora8.getValue()))
+              .append(" VIERNES: ").append(formato.format(jSpinnerHora9.getValue())).append(" | ");
+    }
+    // Eliminar el último " | " si hay texto
+    if (nombre.length() > 0) {
+        nombre.setLength(nombre.length() - 3);
     }
 
-    if (jCheckBox5.isSelected()) {
-        nombre.append("Vie ");
-        if (!txtEnViernes.getText().isEmpty() && !txtSaViernes.getText().isEmpty()) {
-            nombre.append("(").append(txtEnViernes.getText()).append("-").append(txtSaViernes.getText()).append(") ");
-        }
-    }
-    txtNombre.setText(nombre.toString().trim());
+    txtNombre.setText(nombre.toString());
 }
 
-    
+
+
+private void configurarSpinnerHora(JSpinner spinner) {
+    // Inicializar hora en 00:00
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.HOUR_OF_DAY, 0);
+    calendar.set(Calendar.MINUTE, 0);
+    calendar.set(Calendar.SECOND, 0);
+    calendar.set(Calendar.MILLISECOND, 0);
+    Date horaCero = calendar.getTime();
+
+    // Asignar modelo al spinner
+    SpinnerDateModel modelo = new SpinnerDateModel(horaCero, null, null, Calendar.MINUTE);
+    spinner.setModel(modelo);
+
+    // Configurar editor para mostrar HH:mm
+    JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "HH:mm");
+    spinner.setEditor(editor);
+}
+
+
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblE = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         btnAceptar = new javax.swing.JButton();
         btnRegresar = new javax.swing.JButton();
@@ -87,33 +118,28 @@ private void actualizarNombreHorario() {
         lblSalida = new javax.swing.JLabel();
         jCheckBox1 = new javax.swing.JCheckBox();
         lblLunes = new javax.swing.JLabel();
-        txtEnLunes = new javax.swing.JTextField();
-        txtSaLunes = new javax.swing.JTextField();
         lblMartes = new javax.swing.JLabel();
         jCheckBox2 = new javax.swing.JCheckBox();
-        txtEnMartes = new javax.swing.JTextField();
-        txtSaMartes = new javax.swing.JTextField();
         lblMiercoles = new javax.swing.JLabel();
         jCheckBox3 = new javax.swing.JCheckBox();
-        txtEnMiercoles = new javax.swing.JTextField();
-        txtSaMiercoles = new javax.swing.JTextField();
         lblJueves = new javax.swing.JLabel();
         lblViernes = new javax.swing.JLabel();
-        lblSabado = new javax.swing.JLabel();
         jCheckBox4 = new javax.swing.JCheckBox();
         jCheckBox5 = new javax.swing.JCheckBox();
-        jCheckBox6 = new javax.swing.JCheckBox();
-        txtEnJueves = new javax.swing.JTextField();
-        txtSaJueves = new javax.swing.JTextField();
-        txtEnViernes = new javax.swing.JTextField();
-        txtSaViernes = new javax.swing.JTextField();
-        txtEnSabado = new javax.swing.JTextField();
-        txtSaSabado = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jSpinnerHora = new javax.swing.JSpinner();
+        jSpinnerHora1 = new javax.swing.JSpinner();
+        jSpinnerHora2 = new javax.swing.JSpinner();
+        jSpinnerHora3 = new javax.swing.JSpinner();
+        jSpinnerHora4 = new javax.swing.JSpinner();
+        jSpinnerHora5 = new javax.swing.JSpinner();
+        jSpinnerHora6 = new javax.swing.JSpinner();
+        jSpinnerHora7 = new javax.swing.JSpinner();
+        jSpinnerHora8 = new javax.swing.JSpinner();
+        jSpinnerHora9 = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        lblE.setText("EDITAR HORARIO");
 
         btnAceptar.setBackground(new java.awt.Color(0, 255, 255));
         btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/disquete.png"))); // NOI18N
@@ -133,21 +159,15 @@ private void actualizarNombreHorario() {
             }
         });
 
-        lblDia.setText("DÍA");
+        lblDia.setText("DÍA DE LA SEMANA: ");
 
-        lblLaborable.setText("LABORABLE");
+        lblLaborable.setText("¿SE TRABAJA ESTE DÍA?");
 
         lblEntrada.setText("ENTRADA");
 
         lblSalida.setText("SALIDA");
 
         lblLunes.setText("LUNES");
-
-        txtEnLunes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtEnLunesActionPerformed(evt);
-            }
-        });
 
         lblMartes.setText("MARTES");
 
@@ -157,9 +177,10 @@ private void actualizarNombreHorario() {
 
         lblViernes.setText("VIERNES");
 
-        lblSabado.setText("SABADO");
+        jLabel1.setText("NOMBRE DEL HORARIO GENERADO: ");
 
-        jLabel1.setText("DIA Y HORA:");
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 26)); // NOI18N
+        jLabel3.setText("GESTIÓN DE HORARIO LABORAL");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -168,50 +189,42 @@ private void actualizarNombreHorario() {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addComponent(lblLunes))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblMiercoles)
-                            .addComponent(lblMartes)
-                            .addComponent(lblJueves)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lblSabado)
-                                .addComponent(lblViernes))))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(60, 60, 60)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(52, 52, 52)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblDia)
+                            .addComponent(lblMiercoles)
+                            .addComponent(lblJueves)
+                            .addComponent(lblMartes)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblDia)
-                                .addGap(360, 360, 360)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtEnLunes, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblEntrada)
-                                    .addComponent(txtEnMartes, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtEnMiercoles, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtEnJueves, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtEnViernes, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtEnSabado, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                .addGap(1, 1, 1)
+                                .addComponent(lblViernes))
+                            .addComponent(lblLunes))
+                        .addGap(360, 360, 360)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblEntrada)
+                            .addComponent(jSpinnerHora2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                            .addComponent(jSpinnerHora3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jSpinnerHora5, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jSpinnerHora6)
+                            .addComponent(jSpinnerHora8))))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnAceptar))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(59, 59, 59)
+                        .addGap(68, 68, 68)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtSaLunes, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblSalida)
-                            .addComponent(txtSaMartes, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtSaMiercoles, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtSaJueves, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtSaViernes, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtSaSabado, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)))
+                            .addComponent(jSpinnerHora, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSpinnerHora1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSpinnerHora4)
+                            .addComponent(jSpinnerHora7, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jSpinnerHora9, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addGap(93, 93, 93)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblLaborable)
@@ -220,88 +233,83 @@ private void actualizarNombreHorario() {
                     .addComponent(jCheckBox2)
                     .addComponent(jCheckBox3)
                     .addComponent(jCheckBox4)
-                    .addComponent(jCheckBox5)
-                    .addComponent(jCheckBox6))
-                .addContainerGap(223, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(398, 398, 398)
-                .addComponent(lblE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jCheckBox5))
+                .addContainerGap(25, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addGap(365, 365, 365))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(lblE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jSpinnerHora9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(153, 153, 153)
+                        .addComponent(jLabel3)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblDia)
-                                    .addComponent(lblEntrada)
-                                    .addComponent(lblSalida)
-                                    .addComponent(lblLaborable))
-                                .addGap(18, 18, 18)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(127, 127, 127)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(txtEnLunes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtSaLunes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jCheckBox1))
-                                .addGap(3, 3, 3))
-                            .addComponent(lblLunes, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(72, 72, 72)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnAceptar)
-                            .addComponent(btnRegresar)
-                            .addComponent(jLabel1))))
-                .addGap(9, 9, 9)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblMartes)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(txtEnMartes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(txtSaMartes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(15, 15, 15)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(lblLunes)
+                                        .addComponent(jSpinnerHora2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblMiercoles)
-                                        .addGap(9, 9, 9))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(txtEnMiercoles, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtSaMiercoles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(25, 25, 25)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jCheckBox4, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblJueves)
-                                    .addComponent(txtSaJueves, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(txtEnJueves, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(lblDia)
+                                            .addComponent(lblEntrada)
+                                            .addComponent(lblSalida)
+                                            .addComponent(lblLaborable))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jCheckBox1))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(30, 30, 30)
+                                                .addComponent(jSpinnerHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(jCheckBox3))))
-                    .addComponent(jCheckBox2))
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtEnViernes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtSaViernes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblViernes)
-                    .addComponent(jCheckBox5))
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox6)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblSabado)
-                        .addComponent(txtEnSabado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtSaSabado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 60, Short.MAX_VALUE))
+                                .addGap(46, 46, 46)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnAceptar)
+                                    .addComponent(btnRegresar)
+                                    .addComponent(jLabel1))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(37, 37, 37)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(lblMartes)
+                                        .addComponent(jSpinnerHora1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jCheckBox2))
+                                .addGap(35, 35, 35))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSpinnerHora6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(28, 28, 28)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblMiercoles)
+                                    .addComponent(jSpinnerHora3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jSpinnerHora4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(37, 37, 37)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblJueves)
+                                    .addComponent(jSpinnerHora5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jSpinnerHora7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jCheckBox3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jCheckBox4)))
+                        .addGap(43, 43, 43)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(lblViernes)
+                                .addComponent(jSpinnerHora8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jCheckBox5))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -343,14 +351,6 @@ try (Connection cn = ConexionBD.getConnection()) {
         }
     }
 
-            // Insertar días seleccionados
-    insertarDia(cn, idHorario, "Lunes", jCheckBox1, txtEnLunes, txtSaLunes);
-    insertarDia(cn, idHorario, "Martes", jCheckBox2, txtEnMartes, txtSaMartes);
-    insertarDia(cn, idHorario, "Miércoles", jCheckBox3, txtEnMiercoles, txtSaMiercoles);
-    insertarDia(cn, idHorario, "Jueves", jCheckBox4, txtEnJueves, txtSaJueves);
-    insertarDia(cn, idHorario, "Viernes", jCheckBox5, txtEnViernes, txtSaViernes);
-//    insertarDia(cn, idHorario, "Sáb", jCheckBox6, txtEnSabado, txtSaSabado);
-
     JOptionPane.showMessageDialog(this, "✅ Horario creado exitosamente.");
     this.dispose();
 
@@ -358,10 +358,6 @@ try (Connection cn = ConexionBD.getConnection()) {
     JOptionPane.showMessageDialog(this, "❌ Error al guardar: " + e.getMessage());
 }
     }//GEN-LAST:event_btnAceptarActionPerformed
-
-    private void txtEnLunesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEnLunesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtEnLunesActionPerformed
 
     
     
@@ -405,47 +401,30 @@ try (Connection cn = ConexionBD.getConnection()) {
     private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JCheckBox jCheckBox5;
-    private javax.swing.JCheckBox jCheckBox6;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JSpinner jSpinnerHora;
+    private javax.swing.JSpinner jSpinnerHora1;
+    private javax.swing.JSpinner jSpinnerHora2;
+    private javax.swing.JSpinner jSpinnerHora3;
+    private javax.swing.JSpinner jSpinnerHora4;
+    private javax.swing.JSpinner jSpinnerHora5;
+    private javax.swing.JSpinner jSpinnerHora6;
+    private javax.swing.JSpinner jSpinnerHora7;
+    private javax.swing.JSpinner jSpinnerHora8;
+    private javax.swing.JSpinner jSpinnerHora9;
     private javax.swing.JLabel lblDia;
-    private javax.swing.JLabel lblE;
     private javax.swing.JLabel lblEntrada;
     private javax.swing.JLabel lblJueves;
     private javax.swing.JLabel lblLaborable;
     private javax.swing.JLabel lblLunes;
     private javax.swing.JLabel lblMartes;
     private javax.swing.JLabel lblMiercoles;
-    private javax.swing.JLabel lblSabado;
     private javax.swing.JLabel lblSalida;
     private javax.swing.JLabel lblViernes;
-    private javax.swing.JTextField txtEnJueves;
-    private javax.swing.JTextField txtEnLunes;
-    private javax.swing.JTextField txtEnMartes;
-    private javax.swing.JTextField txtEnMiercoles;
-    private javax.swing.JTextField txtEnSabado;
-    private javax.swing.JTextField txtEnViernes;
     private javax.swing.JTextField txtNombre;
-    private javax.swing.JTextField txtSaJueves;
-    private javax.swing.JTextField txtSaLunes;
-    private javax.swing.JTextField txtSaMartes;
-    private javax.swing.JTextField txtSaMiercoles;
-    private javax.swing.JTextField txtSaSabado;
-    private javax.swing.JTextField txtSaViernes;
     // End of variables declaration//GEN-END:variables
 
-      private Connection ConexionBD() {
-        try {
-        Class.forName("com.mysql.cj.jdbc.Driver"); // Asegúrate de tener el driver en tu proyecto
-        return DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/sistemaLectorRFID", // Cambia "mi_basedatos" por el nombre de tu base de datos
-            "root",                                  // Cambia "usuario" por tu nombre de usuario
-            ""                                // Cambia "contraseña" por tu contraseña
-        );
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error de conexión: " + e.getMessage());
-        return null;
-    }
-}   
 
     private void insertarDia(Connection cn, int idHorario, String dia, JCheckBox check, JTextField entrada, JTextField salida) throws SQLException {
    if (!check.isSelected()) return;

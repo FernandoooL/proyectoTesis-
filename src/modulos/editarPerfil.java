@@ -1,5 +1,6 @@
 package modulos;
 
+import conexion.ConexionBD;
 import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,6 +13,12 @@ import modelo.PerfilDao;
 
 
 public class editarPerfil extends javax.swing.JFrame {
+    ConexionBD cn = new ConexionBD();
+   Connection con;
+   PreparedStatement ps;
+   ResultSet rs;
+    
+    
     
      private Perfil perfilActual;
     private PerfilDao perfilDao = new PerfilDao();
@@ -118,7 +125,7 @@ public class editarPerfil extends javax.swing.JFrame {
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         this.dispose(); // Cierra la ventana actual
     for (Frame f : Frame.getFrames()) {
-        if (f instanceof principal) {
+        if (f instanceof perfil) {
             f.setVisible(true); // Muestra la existente si ya está creada
             return;
         }
@@ -134,9 +141,9 @@ public class editarPerfil extends javax.swing.JFrame {
         return;
     }
 
-    try (Connection conn = ConexionBD()) {
+    try (Connection con = ConexionBD.getConnection()) {
         String sql = "UPDATE perfiles SET nombre = ?, descripcion = ? WHERE nombre = ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+        PreparedStatement ps = con.prepareStatement(sql);
         ps.setString(1, nuevoNombre);
         ps.setString(2, nuevaDescripcion);
         ps.setString(3, perfilActual.getNombre()); // condición para identificar el perfil original
@@ -200,17 +207,5 @@ public class editarPerfil extends javax.swing.JFrame {
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 
-    private Connection ConexionBD() {
-        try {
-        Class.forName("com.mysql.cj.jdbc.Driver"); // Asegúrate de tener el driver en tu proyecto
-        return DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/sistemaHuellasDigitalDb", // Cambia "mi_basedatos" por el nombre de tu base de datos
-            "root",                                  // Cambia "usuario" por tu nombre de usuario
-            ""                                // Cambia "contraseña" por tu contraseña
-        );
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error de conexión: " + e.getMessage());
-        return null;
-    }
-    }
+
 }

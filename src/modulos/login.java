@@ -1,5 +1,6 @@
 package modulos;
 
+import com.sun.glass.events.KeyEvent;
 import conexion.ConexionBD;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,7 +28,7 @@ public class login extends javax.swing.JFrame {
     public login() {
         initComponents();
         setLocationRelativeTo(null);
-        getRootPane().setDefaultButton(btnIniciar);
+//        getRootPane().setDefaultButton(btnIniciar);
     }
 
     
@@ -105,16 +106,27 @@ public class login extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "INICIAR SESION", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 0, 16), new java.awt.Color(0, 204, 204))); // NOI18N
 
-        btnIniciar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/iniciar.png"))); // NOI18N
+        btnIniciar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/acceso.png"))); // NOI18N
         btnIniciar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnIniciarActionPerformed(evt);
             }
         });
 
-        jLabel3.setText("Password");
+        txtPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPasswordActionPerformed(evt);
+            }
+        });
+        txtPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPasswordKeyPressed(evt);
+            }
+        });
 
-        jLabel1.setText("Nick");
+        jLabel3.setText("CONTRASEÑA:");
+
+        jLabel1.setText("USUARIO:");
 
         txtNick.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -122,7 +134,7 @@ public class login extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/usua.png"))); // NOI18N
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/agregar-usuario(3).png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -130,39 +142,38 @@ public class login extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(7, 7, 7)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtNick, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                            .addComponent(txtNick)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 35, Short.MAX_VALUE))
+                        .addGap(48, 48, 48)
+                        .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
-            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtNick, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(txtNick, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel4))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -179,46 +190,29 @@ public class login extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(11, 11, 11)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
-   if (txtNick.getText().trim().isEmpty() || txtPassword.getText().trim().isEmpty()) {
-        JOptionPane.showMessageDialog(this, 
-            "Debe completar ambos campos", 
-            "Campos incompletos", 
-            JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-
-    String usuario = txtNick.getText().trim();
-    String password = txtPassword.getText().trim();
-
-    if (autenticarUsuario(usuario, password)) {
-        // Cerrar ventana actual
-        dispose();
-        
-        // Abrir vista correspondiente
-        if ("vista".equals(usuario)) {
-           new vistaUsuario().setVisible(true);
-        } else {
-            new principal().setVisible(true);
-        }
-
-    } else {
-        JOptionPane.showMessageDialog(this, 
-            "Credenciales incorrectas", 
-            "Error de autenticación", 
-            JOptionPane.ERROR_MESSAGE);
-    }
+  iniciarSesion();
     }//GEN-LAST:event_btnIniciarActionPerformed
 
     private void txtNickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNickActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNickActionPerformed
+
+    private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPasswordActionPerformed
+
+    private void txtPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPasswordKeyPressed
+      if (evt.getKeyCode()== KeyEvent.VK_ENTER) {
+                iniciarSesion();
+            }
+    }//GEN-LAST:event_txtPasswordKeyPressed
 
     /**
      * @param args the command line arguments
@@ -265,4 +259,37 @@ public class login extends javax.swing.JFrame {
     private javax.swing.JTextField txtNick;
     private javax.swing.JPasswordField txtPassword;
     // End of variables declaration//GEN-END:variables
+
+public void iniciarSesion(){
+     if (txtNick.getText().trim().isEmpty() || txtPassword.getText().trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, 
+            "Debe completar ambos campos", 
+            "Campos incompletos", 
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    String usuario = txtNick.getText().trim();
+    String password = txtPassword.getText().trim();
+
+    if (autenticarUsuario(usuario, password)) {
+        // Cerrar ventana actual
+        dispose();
+        
+        // Abrir vista correspondiente
+        if ("vista".equals(usuario)) {
+           new vistaUsuario().setVisible(true);
+        } else {
+            new principal().setVisible(true);
+        }
+
+    } else {
+        JOptionPane.showMessageDialog(this, 
+            "Credenciales incorrectas", 
+            "Error de autenticación", 
+            JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+
 }

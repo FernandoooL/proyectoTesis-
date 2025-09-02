@@ -1,21 +1,28 @@
 package modulos;
 
+import conexion.ConexionBD;
 import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 
 public class nuevoPerfil extends javax.swing.JFrame {
 
+   ConexionBD cn = new ConexionBD();
+   Connection con;
+   PreparedStatement ps;
+   ResultSet rs;
+   
+    
     private perfil ventanaOrigen;
     
     public nuevoPerfil(perfil ventanaOrigen) {
         this.ventanaOrigen = ventanaOrigen;
         initComponents();
-        txtID.setEditable(false); 
         this.setLocationRelativeTo(null);
     }
 
@@ -28,8 +35,6 @@ public class nuevoPerfil extends javax.swing.JFrame {
     private void initComponents() {
 
         lblPerfil = new javax.swing.JLabel();
-        lblID = new javax.swing.JLabel();
-        txtID = new javax.swing.JTextField();
         lblNombre = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -40,8 +45,6 @@ public class nuevoPerfil extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblPerfil.setText("NUEVO PERFIL");
-
-        lblID.setText("ID:");
 
         lblNombre.setText("NOMBRE:");
 
@@ -76,46 +79,38 @@ public class nuevoPerfil extends javax.swing.JFrame {
                         .addComponent(lblPerfil))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(94, 94, 94)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnAceptar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnRegresar))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtDescripcion))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lblNombre)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtNombre))
+                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblID)
+                                .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnAceptar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnRegresar)))))
                 .addContainerGap(70, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(lblPerfil)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblID)
-                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(55, 55, 55)
+                .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNombre)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(52, 52, 52)
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAceptar)
                     .addComponent(btnRegresar))
-                .addGap(29, 29, 29))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -129,19 +124,11 @@ public class nuevoPerfil extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
-        Connection conn = null;
-        PreparedStatement ps = null;
-
         try {
-            String url = "jdbc:mysql://localhost:3306/sistemaLectorRFID";
-            String user = "root";
-            String password = "";
-
-            conn = DriverManager.getConnection(url, user, password);
-
+   
+            Connection con = ConexionBD.getConnection();
             String sql = "INSERT INTO perfiles (nombre, descripcion) VALUES (?, ?)";
-            ps = conn.prepareStatement(sql);
+            ps = con.prepareStatement(sql);
             ps.setString(1, nombre);
             ps.setString(2, descripcion);
 
@@ -162,7 +149,7 @@ public class nuevoPerfil extends javax.swing.JFrame {
         } finally {
             try {
                 if (ps != null) ps.close();
-                if (conn != null) conn.close();
+                if (con != null) con.close();
             } catch (SQLException ex) {
                 // Ignorar
             }
@@ -172,7 +159,7 @@ public class nuevoPerfil extends javax.swing.JFrame {
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         this.dispose(); // Cierra la ventana actual
     for (Frame f : Frame.getFrames()) {
-        if (f instanceof principal) {
+        if (f instanceof perfil) {
             f.setVisible(true); // Muestra la existente si ya está creada
             return;
         }
@@ -216,11 +203,9 @@ public class nuevoPerfil extends javax.swing.JFrame {
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnRegresar;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel lblID;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblPerfil;
     private javax.swing.JTextField txtDescripcion;
-    private javax.swing.JTextField txtID;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

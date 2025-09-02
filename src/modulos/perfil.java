@@ -1,5 +1,6 @@
 package modulos;
 
+import conexion.ConexionBD;
 import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,6 +14,13 @@ import modelo.Perfil;
 import modelo.PerfilDao;
 
 public class perfil extends javax.swing.JFrame {
+   ConexionBD cn = new ConexionBD();
+   Connection con;
+   PreparedStatement ps;
+   ResultSet rs;
+    
+    
+    
 
     Perfil vPerfil = new Perfil();
     PerfilDao vPerfilDao = new PerfilDao();
@@ -190,18 +198,11 @@ if (fila >= 0) {
     DefaultTableModel modelo = (DefaultTableModel) tblPerfil  .getModel();
     modelo.setRowCount(0); // Limpiar la tabla antes de cargar nuevos datos
 
-    Connection conn = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-
-    try {
-        String url = "jdbc:mysql://localhost:3306/sistemaLectorRFID";
-        String user = "root";
-        String password = "";
-
-        conn = DriverManager.getConnection(url, user, password);
+     try {
+    
+      Connection con = ConexionBD.getConnection();
         String sql = "SELECT id, nombre, descripcion FROM perfiles";
-        ps = conn.prepareStatement(sql);
+        ps = con.prepareStatement(sql);
         rs = ps.executeQuery();
 
         while (rs.next()) {
@@ -219,7 +220,7 @@ if (fila >= 0) {
         try {
             if (rs != null) rs.close();
             if (ps != null) ps.close();
-            if (conn != null) conn.close();
+            if (con != null) con.close();
         } catch (SQLException ex) {
             // Ignorar errores de cierre
         }

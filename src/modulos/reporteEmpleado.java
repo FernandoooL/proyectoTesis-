@@ -23,6 +23,11 @@ import net.sf.jasperreports.view.JasperViewer;
 
 public class reporteEmpleado extends javax.swing.JFrame {
 
+       ConexionBD cn = new ConexionBD();
+   Connection con;
+   PreparedStatement ps;
+   ResultSet rs;
+   
     
     public reporteEmpleado() {
         initComponents();
@@ -33,9 +38,9 @@ public class reporteEmpleado extends javax.swing.JFrame {
     }
 
     private void cargarDepartamentos() {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/sistemaLectorRFID", "root", "")) {
+        try ( Connection con = ConexionBD.getConnection()) {
             String sql = "SELECT nombre FROM departamentos";
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             jcbDepartamento.removeAllItems();
@@ -49,9 +54,9 @@ public class reporteEmpleado extends javax.swing.JFrame {
     }
 
     private void cargarTiposEmpleado() {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/sistemaLectorRFID", "root", "")) {
+        try ( Connection con = ConexionBD.getConnection()) {
             String sql = "SELECT nombre FROM tiposempleados";
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             jcbTipo.removeAllItems();
@@ -65,9 +70,9 @@ public class reporteEmpleado extends javax.swing.JFrame {
     }
 
     private void cargarEstatus() {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/sistemaLectorRFID", "root", "")) {
+        try ( Connection con = ConexionBD.getConnection()) {
             String sql = "SELECT nombre FROM estatusempleados";
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             jcbEstatus.removeAllItems();

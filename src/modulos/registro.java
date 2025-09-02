@@ -38,8 +38,8 @@ public class registro extends javax.swing.JFrame {
 
     
     private void cargarUsuarios() {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sistemaLectorRFID", "root", "")) {
-            Statement stmt = conn.createStatement();
+        try (Connection con = ConexionBD.getConnection()) {
+            Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT DISTINCT nombre FROM registros");
 
             jComboBox1.removeAllItems();

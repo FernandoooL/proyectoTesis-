@@ -1,20 +1,26 @@
 package modulos;
 
+import conexion.ConexionBD;
 import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 public class nuevoTipoEmpleado extends javax.swing.JFrame {
-   
+   ConexionBD cn = new ConexionBD();
+   Connection con;
+   PreparedStatement ps;
+   ResultSet rs;
+    
+    
     private tipoEmpleado ventanaOrigen;
   
     public nuevoTipoEmpleado(tipoEmpleado ventanaOrigen) {
         this.ventanaOrigen = ventanaOrigen;
         initComponents();
-        txtID.setEditable(false); 
         this.setLocationRelativeTo(null);
     }
 
@@ -28,18 +34,14 @@ public class nuevoTipoEmpleado extends javax.swing.JFrame {
     private void initComponents() {
 
         lblNuevo = new javax.swing.JLabel();
-        lblID = new javax.swing.JLabel();
         lblNombre = new javax.swing.JLabel();
         btnAceptar = new javax.swing.JButton();
         btnRegresar = new javax.swing.JButton();
-        txtID = new javax.swing.JTextField();
         txtNombre = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblNuevo.setText("NUEVO TIPO EMPLEADO");
-
-        lblID.setText("ID:");
 
         lblNombre.setText("NOMBRE:");
 
@@ -67,44 +69,35 @@ public class nuevoTipoEmpleado extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(54, 54, 54)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnAceptar)
-                        .addGap(148, 148, 148)
-                        .addComponent(btnRegresar))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblNombre)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtNombre))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblID)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtID)))
+                .addComponent(lblNombre)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblNuevo)
-                .addGap(107, 107, 107))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblNuevo)
+                        .addGap(107, 107, 107))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnAceptar)
+                        .addGap(148, 148, 148)
+                        .addComponent(btnRegresar)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblID)
-                            .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(lblNuevo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addComponent(lblNuevo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNombre)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(46, 46, 46)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAceptar)
                     .addComponent(btnRegresar))
-                .addGap(40, 40, 40))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -112,21 +105,12 @@ public class nuevoTipoEmpleado extends javax.swing.JFrame {
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
     String nombre = txtNombre.getText().trim();
-
-
-    Connection conn = null;
-    PreparedStatement ps = null;
-
     try {
-        // Conexión a base de datos (ajusta los parámetros según tu configuración)
-        String url = "jdbc:mysql://localhost:3306/sistemaLectorRFID";
-        String user = "root";
-        String password = "";
-
-        conn = DriverManager.getConnection(url, user, password);
+       
+     Connection con = ConexionBD.getConnection();
 
         String sql = "INSERT INTO tiposempleados (nombre) VALUES (?)";
-        ps = conn.prepareStatement(sql);
+        ps = con.prepareStatement(sql);
         ps.setString(1, nombre);
 
         int resultado = ps.executeUpdate();
@@ -146,7 +130,7 @@ public class nuevoTipoEmpleado extends javax.swing.JFrame {
     } finally {
         try {
             if (ps != null) ps.close();
-            if (conn != null) conn.close();
+            if (con != null) con.close();
         } catch (SQLException ex) {
             // Ignorar
         }
@@ -158,7 +142,7 @@ public class nuevoTipoEmpleado extends javax.swing.JFrame {
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         this.dispose(); // Cierra la ventana actual
     for (Frame f : Frame.getFrames()) {
-        if (f instanceof principal) {
+        if (f instanceof tipoEmpleado) {
             f.setVisible(true); // Muestra la existente si ya está creada
             return;
         }
@@ -201,10 +185,8 @@ public class nuevoTipoEmpleado extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnRegresar;
-    private javax.swing.JLabel lblID;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblNuevo;
-    private javax.swing.JTextField txtID;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 

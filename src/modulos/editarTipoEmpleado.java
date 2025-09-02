@@ -41,7 +41,7 @@ public class editarTipoEmpleado extends javax.swing.JFrame {
         btnAceptar = new javax.swing.JButton();
         btnRegresar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblE.setText("EDITAR TIPO EMPLEADO");
 
@@ -109,7 +109,7 @@ public class editarTipoEmpleado extends javax.swing.JFrame {
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         this.dispose(); // Cierra la ventana actual
     for (Frame f : Frame.getFrames()) {
-        if (f instanceof principal) {
+        if (f instanceof tipoEmpleado) {
             f.setVisible(true); // Muestra la existente si ya está creada
             return;
         }

@@ -1,21 +1,29 @@
 package modulos;
 
+import conexion.ConexionBD;
 import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import modelo.Departamento;
 
 public class nuevoDepartamento extends javax.swing.JFrame {
-
+   ConexionBD cn = new ConexionBD();
+   Connection con;
+   PreparedStatement ps;
+   ResultSet rs;
+   
+    
+    
+    
     private departamento ventanaOrigen;
     
     public nuevoDepartamento(departamento ventanaOrigen) {
     this.ventanaOrigen = ventanaOrigen;
     initComponents();
-    txtID.setEditable(false); 
     this.setLocationRelativeTo(null);
 }
 
@@ -28,18 +36,14 @@ public class nuevoDepartamento extends javax.swing.JFrame {
     private void initComponents() {
 
         lblDepartamento = new javax.swing.JLabel();
-        lblID = new javax.swing.JLabel();
         lblNombre = new javax.swing.JLabel();
         btnAceptar = new javax.swing.JButton();
         btnRegresar = new javax.swing.JButton();
-        txtID = new javax.swing.JTextField();
         txtNombre = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblDepartamento.setText("NUEVO DEPARTAMENTO");
-
-        lblID.setText("ID:");
 
         lblNombre.setText("NOMBRE:");
 
@@ -61,12 +65,6 @@ public class nuevoDepartamento extends javax.swing.JFrame {
             }
         });
 
-        txtID.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtIDActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -80,36 +78,28 @@ public class nuevoDepartamento extends javax.swing.JFrame {
                         .addGap(107, 107, 107)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblNombre)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtNombre))
-                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnAceptar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
                                 .addComponent(btnRegresar))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblID)
+                                .addComponent(lblNombre)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtID)))))
+                                .addComponent(txtNombre)))))
                 .addGap(73, 73, 73))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(lblDepartamento)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblID)
-                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(39, 39, 39)
+                .addGap(16, 16, 16)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNombre)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAceptar)
                     .addComponent(btnRegresar))
-                .addGap(0, 35, Short.MAX_VALUE))
+                .addGap(0, 17, Short.MAX_VALUE))
         );
 
         pack();
@@ -118,19 +108,12 @@ public class nuevoDepartamento extends javax.swing.JFrame {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
     String nombre = txtNombre.getText().trim();
 
-    Connection conn = null;
-    PreparedStatement ps = null;
-
     try {
-        // Conexión a base de datos (ajusta los parámetros según tu configuración)
-        String url = "jdbc:mysql://localhost:3306/sistemaLectorRFID";
-        String user = "root";
-        String password = "";
-
-        conn = DriverManager.getConnection(url, user, password);
+   
+       Connection con = ConexionBD.getConnection();
 
         String sql = "INSERT INTO departamentos (nombre) VALUES (?)";
-        ps = conn.prepareStatement(sql);
+        ps = con.prepareStatement(sql);
         ps.setString(1, nombre);
 
         int resultado = ps.executeUpdate();
@@ -150,21 +133,17 @@ public class nuevoDepartamento extends javax.swing.JFrame {
     } finally {
         try {
             if (ps != null) ps.close();
-            if (conn != null) conn.close();
+            if (con != null) con.close();
         } catch (SQLException ex) {
             // Ignorar
         }
     }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
-    private void txtIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtIDActionPerformed
-
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         this.dispose(); // Cierra la ventana actual
     for (Frame f : Frame.getFrames()) {
-        if (f instanceof principal) {
+        if (f instanceof departamento) {
             f.setVisible(true); // Muestra la existente si ya está creada
             return;
         }
@@ -209,9 +188,7 @@ public class nuevoDepartamento extends javax.swing.JFrame {
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnRegresar;
     private javax.swing.JLabel lblDepartamento;
-    private javax.swing.JLabel lblID;
     private javax.swing.JLabel lblNombre;
-    private javax.swing.JTextField txtID;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 

@@ -1,5 +1,6 @@
 package modulos;
 
+import conexion.ConexionBD;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Graphics2D;
@@ -31,18 +32,24 @@ import modelo.Empleado;
 
 
 public class nuevoEmpleado extends javax.swing.JFrame {
-
+     ConexionBD cn = new ConexionBD();
+   Connection con;
+   PreparedStatement ps;
+   ResultSet rs;
+    
+    
      private empleados ventanaOrigen;
      private File archivoSeleccionado;
    
     public nuevoEmpleado(empleados ventanaOrigen) {
         initComponents();
-        txtID.setEditable(false);
+//        txtID.setEditable(false);
         this.ventanaOrigen = ventanaOrigen;
         this.setLocationRelativeTo(null);
         llenarComboTipoEmpleado();
         llenarComboEstatus();
         llenarComboDepartamento();
+        llenarComboHorario();
     }
 
     private nuevoEmpleado() {
@@ -51,8 +58,8 @@ public class nuevoEmpleado extends javax.swing.JFrame {
 
     private void llenarComboTipoEmpleado() {
     jcbTipo.removeAllItems();
-    try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sistemaLectorRFID", "root", "");
-         Statement stmt = conn.createStatement();
+    try (Connection con = ConexionBD.getConnection();
+         Statement stmt = con.createStatement();
          ResultSet rs = stmt.executeQuery("SELECT id, nombre FROM tiposempleados")) {
 
         while (rs.next()) {
@@ -69,8 +76,8 @@ public class nuevoEmpleado extends javax.swing.JFrame {
 
    private void llenarComboEstatus() {
     jcbEstatus.removeAllItems();
-    try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sistemaLectorRFID", "root", "");
-         Statement stmt = conn.createStatement();
+    try (Connection con = ConexionBD.getConnection();
+         Statement stmt = con.createStatement();
          ResultSet rs = stmt.executeQuery("SELECT id, nombre FROM estatusempleados")) {
 
         while (rs.next()) {
@@ -86,8 +93,8 @@ public class nuevoEmpleado extends javax.swing.JFrame {
 }       
         private void llenarComboDepartamento() {
     jcbDepa.removeAllItems();
-    try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sistemaLectorRFID", "root", "");
-         Statement stmt = conn.createStatement();
+    try (Connection con = ConexionBD.getConnection();
+         Statement stmt = con.createStatement();
          ResultSet rs = stmt.executeQuery("SELECT id, nombre FROM departamentos")) {
 
         while (rs.next()) {
@@ -102,8 +109,26 @@ public class nuevoEmpleado extends javax.swing.JFrame {
     }
 }
 
+        private void llenarComboHorario() {
+    jcbHorario.removeAllItems();
+    try (Connection con = ConexionBD.getConnection();
+         Statement stmt = con.createStatement();
+         ResultSet rs = stmt.executeQuery("SELECT id, nombre FROM horarios")) { 
+
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String nombre = rs.getString("nombre");
+            jcbHorario.addItem(new ItemCombo(id, nombre));
+        }
+
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error al cargar horarios", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
     
-    public class ItemCombo {
+    public static class ItemCombo {
     private int id;
     private String nombre;
 
@@ -112,15 +137,15 @@ public class nuevoEmpleado extends javax.swing.JFrame {
         this.nombre = nombre;
     }
 
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
+    public String getNombre() { return nombre; }
 
     @Override
     public String toString() {
-        return nombre; // Así se muestra en el JComboBox
+        return nombre;
     }
 }
+
 
     public ByteArrayInputStream comprimirImagen(File archivoOriginal, float calidad) throws IOException {
     BufferedImage imagenOriginal = ImageIO.read(archivoOriginal);
@@ -175,7 +200,6 @@ public class nuevoEmpleado extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        lblID = new javax.swing.JLabel();
         lblTipoE = new javax.swing.JLabel();
         lblEstatus = new javax.swing.JLabel();
         lblDepartamento = new javax.swing.JLabel();
@@ -191,8 +215,6 @@ public class nuevoEmpleado extends javax.swing.JFrame {
         btnAceptar = new javax.swing.JButton();
         btnRegresar = new javax.swing.JButton();
         jdcFecha = new com.toedter.calendar.JDateChooser();
-        txtID = new javax.swing.JTextField();
-        txtHorario = new javax.swing.JTextField();
         txtNombre = new javax.swing.JTextField();
         txtAp = new javax.swing.JTextField();
         txtAp2 = new javax.swing.JTextField();
@@ -207,6 +229,7 @@ public class nuevoEmpleado extends javax.swing.JFrame {
         jcbDepa = new javax.swing.JComboBox();
         lblFoto = new javax.swing.JLabel();
         btnFoto = new javax.swing.JButton();
+        jcbHorario = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addMouseListener(new java.awt.event.MouseAdapter() {
@@ -216,8 +239,6 @@ public class nuevoEmpleado extends javax.swing.JFrame {
         });
 
         jLabel1.setText("REGISTRAR NUEVO EMPLEADO");
-
-        lblID.setText("ID:");
 
         lblTipoE.setText("TIPO EMPLEADO:");
 
@@ -285,6 +306,8 @@ public class nuevoEmpleado extends javax.swing.JFrame {
             }
         });
 
+        jcbHorario.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -292,85 +315,81 @@ public class nuevoEmpleado extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(225, 225, 225)
+                        .addGap(334, 334, 334)
+                        .addComponent(lblUID)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtUID, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(48, 48, 48)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblCurp)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtCurp, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblID)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                            .addComponent(lblTipoE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(jcbTipo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                            .addComponent(lblUID)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(txtUID, javax.swing.GroupLayout.PREFERRED_SIZE, 454, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblHorario)
+                                .addComponent(lblCurp)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtHorario, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblTelefono)
+                                .addComponent(txtCurp, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(39, 39, 39)
+                                .addComponent(lblObservaciones)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblDomicilio)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblFecha)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jdcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblNombre)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 465, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(lblDomicilio)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txtDomicilio))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(lblTipoE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jcbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(lblEstatus)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jcbEstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(lblNombre)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(lblAp)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(txtAp, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(lblFecha)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jdcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGap(28, 28, 28)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(lblTelefono)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(lblAp2)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(txtAp2, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                     .addComponent(lblDepartamento)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jcbDepa, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addComponent(lblEstatus)
+                                    .addComponent(jcbDepa, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(31, 31, 31)
+                                    .addComponent(lblHorario)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jcbEstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addComponent(btnAceptar)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnRegresar))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addComponent(lblObservaciones)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txtObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblFoto)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(jcbHorario, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(370, 370, 370)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(225, 225, 225)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(245, 245, 245)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblAp2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtAp2, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnAceptar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnRegresar))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblAp)
+                                .addComponent(lblFoto)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtAp, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(238, Short.MAX_VALUE))
+                                .addComponent(btnFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -378,71 +397,69 @@ public class nuevoEmpleado extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblID)
-                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(48, 48, 48)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtUID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblUID))
-                .addGap(33, 33, 33)
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblTipoE)
+                        .addComponent(jcbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(lblEstatus)
+                            .addGap(6, 6, 6))
+                        .addComponent(jcbEstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTipoE)
-                    .addComponent(jcbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblDepartamento)
+                    .addComponent(jcbDepa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblHorario)
+                    .addComponent(jcbHorario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(84, 84, 84)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNombre)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblEstatus)
-                        .addGap(46, 46, 46)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblDepartamento)
-                            .addComponent(jcbDepa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(46, 46, 46)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblHorario)
-                            .addComponent(txtHorario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(52, 52, 52)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblNombre)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(40, 40, 40)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblAp)
-                            .addComponent(txtAp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(41, 41, 41)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtAp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblAp2)
                             .addComponent(txtAp2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(44, 44, 44)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblFecha)
-                            .addComponent(jdcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(44, 44, 44)
+                            .addComponent(jdcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblTelefono)
+                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDomicilio)
+                    .addComponent(txtDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(38, 38, 38)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblDomicilio)
-                            .addComponent(txtDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(33, 33, 33)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblTelefono)
-                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(43, 43, 43)
+                            .addComponent(txtCurp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblCurp)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtCurp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(37, 37, 37)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblObservaciones)
-                                    .addComponent(txtObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(lblCurp)))
-                    .addComponent(jcbEstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                                .addGap(10, 10, 10)
+                                .addComponent(lblObservaciones))
+                            .addComponent(txtObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblFoto)
                     .addComponent(btnFoto))
-                .addGap(22, 22, 22)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAceptar)
                     .addComponent(btnRegresar))
-                .addGap(25, 25, 25))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -453,7 +470,7 @@ public class nuevoEmpleado extends javax.swing.JFrame {
 int tipoE = ((ItemCombo) jcbTipo.getSelectedItem()).getId();
 int estatus = ((ItemCombo) jcbEstatus.getSelectedItem()).getId();
 int departamento = ((ItemCombo) jcbDepa.getSelectedItem()).getId();
-String horario = txtHorario.getText().trim();
+int horario = ((ItemCombo) jcbHorario.getSelectedItem()).getId();
 String nombre = txtNombre.getText().trim();
 String ap = txtAp.getText().trim();
 String ap2 = txtAp2.getText().trim();
@@ -463,23 +480,17 @@ String curp = txtCurp.getText().trim();
 String observaciones = txtObservaciones.getText().trim();
 java.util.Date fecha = jdcFecha.getDate();
 
-Connection conn = null;
-PreparedStatement ps = null;
 
 try {
-    String url = "jdbc:mysql://localhost:3306/sistemaLectorRFID";
-    String user = "root";
-    String password = "";
-
-    conn = DriverManager.getConnection(url, user, password);
+    Connection con = ConexionBD.getConnection();
 
     String insertSql = "INSERT INTO empleados (uid, idTipoEmpleado, idEstatusEmpleado, idDepartamento, idHorario, nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, domicilio, telefono, curp, observaciones, fotografia) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    ps = conn.prepareStatement(insertSql);
+    ps = con.prepareStatement(insertSql);
     ps.setString(1, uid);
     ps.setInt(2, tipoE);
     ps.setInt(3, estatus);
     ps.setInt(4, departamento);
-    ps.setString(5, horario);
+    ps.setInt(5, horario);
     ps.setString(6, nombre);
     ps.setString(7, ap);
     ps.setString(8, ap2);
@@ -524,7 +535,7 @@ try {
          } finally {
     try {
         if (ps != null) ps.close();
-        if (conn != null) conn.close();
+        if (con != null) con.close();
     } catch (SQLException ex) {
         // Ignorar
     }
@@ -571,7 +582,7 @@ try {
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         this.dispose(); // Cierra la ventana actual
     for (Frame f : Frame.getFrames()) {
-        if (f instanceof principal) {
+        if (f instanceof empleados) {
             f.setVisible(true); // Muestra la existente si ya está creada
             return;
         }
@@ -618,6 +629,7 @@ try {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JComboBox jcbDepa;
     private javax.swing.JComboBox jcbEstatus;
+    private javax.swing.JComboBox jcbHorario;
     private javax.swing.JComboBox jcbTipo;
     private com.toedter.calendar.JDateChooser jdcFecha;
     private javax.swing.JLabel lblAp;
@@ -629,7 +641,6 @@ try {
     private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblFoto;
     private javax.swing.JLabel lblHorario;
-    private javax.swing.JLabel lblID;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblObservaciones;
     private javax.swing.JLabel lblTelefono;
@@ -639,25 +650,23 @@ try {
     private javax.swing.JTextField txtAp2;
     private javax.swing.JTextField txtCurp;
     private javax.swing.JTextField txtDomicilio;
-    private javax.swing.JTextField txtHorario;
-    private javax.swing.JTextField txtID;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtObservaciones;
     private javax.swing.JTextField txtTelefono;
     private javax.swing.JTextField txtUID;
     // End of variables declaration//GEN-END:variables
-private Connection ConexionBD() {
-        try {
-        Class.forName("com.mysql.cj.jdbc.Driver"); // Asegúrate de tener el driver en tu proyecto
-        return DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/sistemaLectorRFID", // Cambia "mi_basedatos" por el nombre de tu base de datos
-            "root",                                  // Cambia "usuario" por tu nombre de usuario
-            ""                                // Cambia "contraseña" por tu contraseña
-        );
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error de conexión: " + e.getMessage());
-        return null;
-    }
-    }
+//private Connection ConexionBD() {
+//        try {
+//        Class.forName("com.mysql.cj.jdbc.Driver"); // Asegúrate de tener el driver en tu proyecto
+//        return DriverManager.getConnection(
+//            "jdbc:mysql://localhost:3306/sistemaLectorRFID", // Cambia "mi_basedatos" por el nombre de tu base de datos
+//            "root",                                  // Cambia "usuario" por tu nombre de usuario
+//            ""                                // Cambia "contraseña" por tu contraseña
+//        );
+//    } catch (Exception e) {
+//        JOptionPane.showMessageDialog(this, "Error de conexión: " + e.getMessage());
+//        return null;
+//    }
+//    }
 
 }

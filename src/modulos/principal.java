@@ -1,10 +1,13 @@
 package modulos;
 
+import conexion.ConexionBD;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -37,9 +40,14 @@ import javax.swing.Timer;
 
 
 public class principal extends javax.swing.JFrame {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/sistemaLectorRFID";
-    private static final String DB_USER = "root";
-    private static final String DB_PASS = ""; // tu contraseña si tiene
+     ConexionBD cn = new ConexionBD();
+   Connection con;
+   PreparedStatement ps;
+   ResultSet rs;
+    
+//    private static final String DB_URL = "jdbc:mysql://localhost:3306/sistemaLectorRFID";
+//    private static final String DB_USER = "root";
+//    private static final String DB_PASS = ""; // tu contraseña si tiene
     
     private JLabel lblFecha;
     private JLabel lblTitulo;
@@ -49,10 +57,13 @@ public class principal extends javax.swing.JFrame {
     initComponents();      
     
     setTitle("VISTA ADMINISTRADOR");
+     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+     setSize(screenSize.width, screenSize.height); // Tamaño completo de la pantalla
     setExtendedState(JFrame.MAXIMIZED_BOTH); // Pantalla completa
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     getContentPane().setBackground(new Color(173, 216, 230)); // Azul claro
     setLocationRelativeTo(null);
+    this.setResizable(false); // Comentar en caso de dar problemas
 
     iniciarInterfaz();
     iniciarReloj();
@@ -141,9 +152,9 @@ public class principal extends javax.swing.JFrame {
   private void validarAcceso(String uid) {
     if (uid.isEmpty()) return;
 
-    try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+    try (Connection con = ConexionBD.getConnection()) {
         String sql = "SELECT nombre FROM empleados WHERE uid = ?";
-        PreparedStatement stmt = conn.prepareStatement(sql);
+        PreparedStatement stmt = con.prepareStatement(sql);
         stmt.setString(1, uid);
         ResultSet rs = stmt.executeQuery();
 
@@ -152,7 +163,7 @@ public class principal extends javax.swing.JFrame {
 
             // Verificar si ya hay una entrada sin salida hoy
             String checkSql = "SELECT id FROM registros WHERE uid = ? AND DATE(fecha_entrada) = CURDATE() AND fecha_salida IS NULL";
-            PreparedStatement checkStmt = conn.prepareStatement(checkSql);
+            PreparedStatement checkStmt = con.prepareStatement(checkSql);
             checkStmt.setString(1, uid);
             ResultSet checkRs = checkStmt.executeQuery();
 
@@ -163,7 +174,7 @@ public class principal extends javax.swing.JFrame {
                 int registroId = checkRs.getInt("id");
 
                 String updateSql = "UPDATE registros SET fecha_salida = NOW() WHERE id = ?";
-                PreparedStatement updateStmt = conn.prepareStatement(updateSql);
+                PreparedStatement updateStmt = con.prepareStatement(updateSql);
                 updateStmt.setInt(1, registroId);
                 updateStmt.executeUpdate();
 
@@ -188,7 +199,7 @@ public class principal extends javax.swing.JFrame {
             } else {
                 // No hay entrada hoy → registrar entrada
             String insertSql = "INSERT INTO registros (uid, nombre, fecha_entrada) VALUES (?, ?, NOW())";
-            PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+            PreparedStatement insertStmt = con.prepareStatement(insertSql);
             insertStmt.setString(1, uid);
             insertStmt.setString(2, nombre);
             insertStmt.executeUpdate();
@@ -238,6 +249,7 @@ public class principal extends javax.swing.JFrame {
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem12 = new javax.swing.JMenuItem();
+        jMenuItem13 = new javax.swing.JMenuItem();
         jMenuItem14 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem9 = new javax.swing.JMenuItem();
@@ -245,6 +257,7 @@ public class principal extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu8 = new javax.swing.JMenu();
+        jMenuItem8 = new javax.swing.JMenuItem();
         jMenuItem11 = new javax.swing.JMenuItem();
         jMenu9 = new javax.swing.JMenu();
         jMenuItem10 = new javax.swing.JMenuItem();
@@ -314,6 +327,14 @@ public class principal extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem12);
 
+        jMenuItem13.setText("REPORTE DE INCIDENCIAS");
+        jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem13ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem13);
+
         jMenuItem14.setText("REPORTE DE REGISTRO");
         jMenuItem14.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -361,6 +382,14 @@ public class principal extends javax.swing.JFrame {
         jMenu8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/auditoria.png"))); // NOI18N
         jMenu8.setText("AUDITORIA");
 
+        jMenuItem8.setText("INCIDENCIAS");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu8.add(jMenuItem8);
+
         jMenuItem11.setText("REGISTRO");
         jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -390,11 +419,11 @@ public class principal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1132, Short.MAX_VALUE)
+            .addGap(0, 1305, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 765, Short.MAX_VALUE)
+            .addGap(0, 937, Short.MAX_VALUE)
         );
 
         pack();
@@ -465,6 +494,16 @@ public class principal extends javax.swing.JFrame {
     vC.setVisible(true);
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+       incidencias i = new incidencias();
+       i.setVisible(true);
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
+        reporteIncidencias rep = new reporteIncidencias();
+        rep.setVisible(true);
+    }//GEN-LAST:event_jMenuItem13ActionPerformed
+
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -509,6 +548,7 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
+    private javax.swing.JMenuItem jMenuItem13;
     private javax.swing.JMenuItem jMenuItem14;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
@@ -516,6 +556,7 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
     // End of variables declaration//GEN-END:variables
 

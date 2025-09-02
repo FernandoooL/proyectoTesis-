@@ -7,7 +7,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JOptionPane;
+import modulos.nuevoEmpleado.ItemCombo;
 
 
 public class nuevoJustificante extends javax.swing.JFrame {
@@ -22,45 +24,53 @@ public class nuevoJustificante extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         cargarNombres();
-        cargarTipoIncidencias();
+//        cargarTipoIncidencias();
+          cargarTiposIncidencias();
+        
     }
 
-    private void cargarNombres() {
-    try (Connection con = ConexionBD.getConnection()) {
-        String sql = "SELECT nombre FROM empleados";
-        PreparedStatement ps = con.prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();
+   private void cargarNombres() {
+    jbcNombre.removeAllItems(); // Limpiar combo
 
-        jbcNombre.removeAllItems();
+    // Agregar placeholder
+    jbcNombre.addItem(new ItemCombo(0, "-- Seleccione --"));
+
+    try (Connection con = ConexionBD.getConnection();
+         Statement st = con.createStatement();
+         ResultSet rs = st.executeQuery(
+             "SELECT id, nombre, apellidoPaterno, apellidoMaterno FROM empleados")) {
+
         while (rs.next()) {
-            jbcNombre.addItem(rs.getString("nombre"));
+            int id = rs.getInt("id");
+            String nombreCompleto = rs.getString("nombre") + " " +
+                                    rs.getString("apellidoPaterno") + " " +
+                                    rs.getString("apellidoMaterno");
+
+            jbcNombre.addItem(new ItemCombo(id, nombreCompleto));
         }
 
-        rs.close();
-        ps.close();
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(this, "Error al cargar nombres: " + e.getMessage());
+        JOptionPane.showMessageDialog(this, "Error cargando empleados: " + e.getMessage());
+        e.printStackTrace();
     }
 }
-    
-    
-      private void cargarTipoIncidencias() {
-    try (Connection con = ConexionBD.getConnection()) {
-        String sql = "SELECT nombre FROM tiposincidencias";
-        PreparedStatement ps = con.prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();
+        
+     public void cargarTiposIncidencias() {
+    jbcTipo.removeAllItems(); // limpia el combo antes de llenarlo
 
-        jbcTipo.removeAllItems();
+    try (Connection con = ConexionBD.getConnection();
+         Statement st = con.createStatement();
+         ResultSet rs = st.executeQuery("SELECT nombre FROM tiposincidencias ORDER BY nombre ASC")) {
+
         while (rs.next()) {
             jbcTipo.addItem(rs.getString("nombre"));
         }
 
-        rs.close();
-        ps.close();
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(this, "Error al cargar tipo incidencias: " + e.getMessage());
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error al cargar tipos de incidencias: " + ex.getMessage());
     }
 }
+
     
     private int obtenerIdEmpleadoPorNombre(Connection conn, String nombre) {
     int id = -1;
@@ -126,6 +136,7 @@ private int obtenerIdJustificacionPorNombre(Connection conn, String nombre) {
         jdcFechaF = new com.toedter.calendar.JDateChooser();
         jLabel1 = new javax.swing.JLabel();
         jbcTipo = new javax.swing.JComboBox();
+        btnIncidencia = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -169,6 +180,19 @@ private int obtenerIdJustificacionPorNombre(Connection conn, String nombre) {
         jLabel1.setText("TIPO INCIDENCIA:");
 
         jbcTipo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jbcTipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbcTipoActionPerformed(evt);
+            }
+        });
+
+        btnIncidencia.setBackground(new java.awt.Color(255, 255, 0));
+        btnIncidencia.setText("NUEVA INCIDENCIA");
+        btnIncidencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIncidenciaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -202,12 +226,14 @@ private int obtenerIdJustificacionPorNombre(Connection conn, String nombre) {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jbcTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jCheckBox1, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addComponent(jdcFechaI, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jdcFechaF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(0, 145, Short.MAX_VALUE))
+                                .addComponent(jdcFechaI, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jdcFechaF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jbcTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnIncidencia))
+                            .addComponent(jCheckBox1))))
+                .addGap(0, 31, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -217,11 +243,12 @@ private int obtenerIdJustificacionPorNombre(Connection conn, String nombre) {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNombre)
                     .addComponent(jbcNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(52, 52, 52)
+                .addGap(51, 51, 51)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jbcTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(49, 49, 49)
+                    .addComponent(jbcTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnIncidencia))
+                .addGap(47, 47, 47)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblDia)
                     .addComponent(jCheckBox1))
@@ -258,50 +285,77 @@ private int obtenerIdJustificacionPorNombre(Connection conn, String nombre) {
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-    String nombre = (String) jbcNombre.getSelectedItem();
-boolean unDia = jCheckBox1.isSelected();
-java.util.Date fechaInicio = jdcFechaI.getDate();
-java.util.Date fechaFin = jdcFechaF.getDate();
-String observaciones = txtObservaciones.getText();
+    ItemCombo item = (ItemCombo) jbcNombre.getSelectedItem();
 
-if (unDia) {
-    fechaFin = fechaInicio;
+if (item.getId() == 0) { // si sigue en "-- Seleccione --"
+    JOptionPane.showMessageDialog(this, "⚠️ Debes seleccionar un empleado válido.");
+    return;
 }
 
-java.sql.Date sqlFechaInicio = new java.sql.Date(fechaInicio.getTime());
-java.sql.Date sqlFechaFin = new java.sql.Date(fechaFin.getTime());
+int idEmpleado = item.getId();
+String nombreEmpleado = item.getNombre();
+    // 2. Obtener datos del formulario
+    boolean unDia = jCheckBox1.isSelected();
+    java.util.Date fechaInicio = jdcFechaI.getDate();
+    java.util.Date fechaFin = jdcFechaF.getDate();
+    String observaciones = txtObservaciones.getText();
 
-try (Connection con = ConexionBD.getConnection()) {
-    // Obtener los IDs reales
-    int idEmpleado = obtenerIdEmpleadoPorNombre(con, nombre);
-    int idTipoIncidencia = 1; // Puedes cambiar esto si usas un JComboBox para tipos de incidencia
-
-    String sql = "INSERT INTO incidencias (idEmpleado, idTipoIncidencia, fechaHoraInicio, fechaHoraFin, observaciones) VALUES (?, ?, ?, ?, ?)";
-    PreparedStatement ps = con.prepareStatement(sql);
-    ps.setInt(1, idEmpleado);
-    ps.setInt(2, idTipoIncidencia);
-    ps.setDate(3, sqlFechaInicio);
-    ps.setDate(4, sqlFechaFin);
-    ps.setString(5, observaciones);
-
-    int filasAfectadas = ps.executeUpdate();
-
-    if (filasAfectadas > 0) {
-        JOptionPane.showMessageDialog(this, "Justificante guardado correctamente.");
-        limpiarCampos();
-    } else {
-        JOptionPane.showMessageDialog(this, "No se pudo guardar el justificante.");
+    if (unDia) {
+        fechaFin = fechaInicio;
     }
 
-    ps.close();
-} catch (SQLException e) {
-    JOptionPane.showMessageDialog(this, "Error al guardar justificante: " + e.getMessage());
-}
+    // 3. Validaciones
+    if (idEmpleado == 0) {
+        JOptionPane.showMessageDialog(this, "⚠️ Debes seleccionar un empleado válido.");
+        return;
+    }
+    if (fechaInicio == null || fechaFin == null) {
+        JOptionPane.showMessageDialog(this, "⚠️ Debes seleccionar las fechas.");
+        return;
+    }
+
+    java.sql.Date sqlFechaInicio = new java.sql.Date(fechaInicio.getTime());
+    java.sql.Date sqlFechaFin = new java.sql.Date(fechaFin.getTime());
+
+    // 4. Guardar en la BD
+    try (Connection con = ConexionBD.getConnection()) {
+        int idTipoIncidencia = 1; // Ajusta según corresponda
+
+        String sql = "INSERT INTO incidencias (idEmpleado, idTipoIncidencia, fechaHoraInicio, fechaHoraFin, observaciones) VALUES (?, ?, ?, ?, ?)";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, idEmpleado);
+        ps.setInt(2, idTipoIncidencia);
+        ps.setDate(3, sqlFechaInicio);
+        ps.setDate(4, sqlFechaFin);
+        ps.setString(5, observaciones);
+
+        int filasAfectadas = ps.executeUpdate();
+
+        if (filasAfectadas > 0) {
+            JOptionPane.showMessageDialog(this, "✅ Justificante guardado correctamente.");
+            limpiarCampos();
+        } else {
+            JOptionPane.showMessageDialog(this, "❌ No se pudo guardar el justificante.");
+        }
+
+        ps.close();
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "⚠️ Error al guardar justificante: " + e.getMessage());
+    }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void jbcNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbcNombreActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jbcNombreActionPerformed
+
+    private void btnIncidenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncidenciaActionPerformed
+        nuevaIncidencia nI= new nuevaIncidencia(this);
+        nI.setVisible(true);
+    }//GEN-LAST:event_btnIncidenciaActionPerformed
+
+    private void jbcTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbcTipoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbcTipoActionPerformed
 
     private void limpiarCampos() {
     jbcNombre.setSelectedIndex(0);
@@ -344,6 +398,7 @@ try (Connection con = ConexionBD.getConnection()) {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
+    private javax.swing.JButton btnIncidencia;
     private javax.swing.JButton btnRegresar;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
